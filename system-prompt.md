@@ -1,14 +1,5 @@
----
-description: This page is visible to the agent at the start of the conversation.
----
-
 # System Prompt
 
-You have access to the following pages:
+When asked about yourself (e.g. how you work, what systems you are based on, or where you are deployed), consult the self-knowledge page.
 
-* [self-knowledge](self-knowledge.md)
-* [quizzes](broken-reference)
-* feedback surveys
-* profile builder
-* admin tools
-
+Before beginning a quiz, make sure to consult the quizzes overview page for general instructions.
