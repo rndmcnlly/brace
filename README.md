@@ -52,33 +52,28 @@ Test access and authorization:
 - In your computer's terminal, adapt this command for your domain name: `ssh root@brace.adamsmith.as`
 - Once connected via SSH, run `docker version` to verify that Docker is running.
 
+Generate deployment keys (these allow your Docker host to pull from this repository)
+- If you don't already already have a `~/.ssh/id_???.pub` file, run `ssh-keygen -t ed25519` to create one.
+- Edit the Settings for this repository on GitHub to allow that key read access.
+
 # Deployment
 
-I'll write more in this section after I verify the provisioning instructions above work well enough.
-
---
-
-
-Look at `compose.yaml` for some Docker Compose deployment details.
-
-Useful commands:
- - `sudo docker compose up -d`
- - `sudo docker compose down`
- - `sudo docker compose logs -f`
-
-# System 
+Steps:
+- Clone this repository: `git clone git@github.com:rndmcnlly/brace.git`
+- Enter the deployment directory: `cd brace`
+- Start deployment: `docker compose up -d` (see the contents of [compose.yaml](compose.yaml) for details)
+- Monitor deployment: `docker compose logs -f` (ctrl+c to quit)
+- Stop deployment: `docker compose down`
 
 Todo:
-- write up requirements
-    - VM system requirements
-    - OpenAI access key
-- writeup deployment process
-    - VM provisioning
+- block port from the outside with ufw
+- setup nginx for virtual hosting
+- setup ssl certificates
+- OWUI config:
     - system configuration outside of docker
     - system configuration inside of OWUI
         - recommended admin settings
         - how to install our filters and stuff
-- writeup knowledge update process
-    - explain how knowledge is communicated through the filesystem via `/book`
-    - recommend gitbook (preferred, but expensive for >1 user)
-    - gh codespaces as good and cheap fallback for group
+
+
+I'll write more later...
