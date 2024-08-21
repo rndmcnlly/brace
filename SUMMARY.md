@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Home](README.md)
+* [System Prompt](README.md)
 * [Self-knowledge](self-knowledge.md)
 
 ## Quizzes
