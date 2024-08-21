@@ -1,5 +1,24 @@
-# README
+This is the top-level README for the Brace project, not to be confused with the readme in the [book](book/README.md) folder.
 
-Use this repository to configure Brace's knowledge base. Brace starts off conversations with access to the [System Prompt](system-prompt.md) page and instructions for how to navigate pages from there. Each page accessed in a conversation rapidly grows the length of the conversation history in terms of the number of tokens passed to the LLM for chat completion. So, try to keep it concise.
 
-Oh, maybe Brace also gets access to the general SUMMARY document as well. That might give it better awareness of what is knowable by consulting this wiki.
+Look at `compose.yaml` for some Docker Compose deployment details.
+
+Useful commands:
+ - `sudo docker compose up -d`
+ - `sudo docker compose down`
+ - `sudo docker compose logs -f`
+
+Todo:
+- write up requirements
+    - VM system requirements
+    - OpenAI access key
+- writeup deployment process
+    - VM provisioning
+    - system configuration outside of docker
+    - system configuration inside of OWUI
+        - recommended admin settings
+        - how to install our filters and stuff
+- writeup knowledge update process
+    - explain how knowledge is communicated through the filesystem via `/book`
+    - recommend gitbook (preferred, but expensive for >1 user)
+    - gh codespaces as good and cheap fallback for group
