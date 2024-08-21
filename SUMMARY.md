@@ -1,6 +1,7 @@
 # Table of contents
 
-* [System Prompt](README.md)
+* [README](README.md)
+* [System Prompt](<README (1).md>)
 * [Self-knowledge](self-knowledge.md)
 
 ## Quizzes
