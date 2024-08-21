@@ -1,4 +1,62 @@
-This is the top-level README for the Brace project, not to be confused with the readme in the [book](book/README.md) folder.
+# Brace
+
+Brace is an LLM-powered course assistant created [Adam Smith](https://adamsmith.as/) to help with teaching feedback-intensive courses with large student populations.
+
+Brace offers:
+- a free and (relatively) unlimited alternative to [ChatGPT](https://chatgpt.com/) that responds in a way that can be shaped by the course staff
+- an inteface for engaging in dialog-based activities that aren't well supported by traditional learning management systems like [Canvas](https://www.instructure.com/canvas)
+- a dispenser for knowledge from that FAQ on your syllabus that students often forget to read
+- a way to provide individualized support to students when your human staff is unavailable
+- a way to monitor and learn from student's GenAI usage
+- ... (more, depending on what other features we add)
+
+# Overview
+
+Brace is composed of four major components:
+- A **front-end chat interface** based on [Open WebUI](https://github.com/open-webui/open-webui) (OWUI). OWUI runs inside of a Docker container.
+- A **back-end chat-completion engine** based on the [OpenAI Chat Completions API](https://platform.openai.com/docs/guides/chat-completions) (which is implemented by may providers beyond OpenAI).
+- A **knowledge wiki** consisting of a collection of linked Markdown documents providing the assistant with specialized knowledge and behavioral instructions relevant to the current conversational context. Unlike mainstream retrieval-augmented generation (RAG) engines, accesses to this wiki are based on explicit and exact lookup of entire documents (rather than implicit lookup of document fragments).
+- An **assistant character**, Brace, that applies a customized system prompt when chatting with users, consulting the knowledge wiki as needed.
+
+# System Requirements
+
+Before you deploy Brace, make sure you are willing to provide the following:
+- A (virtual) machine with more than 1GB of RAM, e.g. from [DigitalOcean](https://www.digitalocean.com/). In preliminary testing, the system seems to idle at ~800MB of RAM usage, but this leaves little room for unexpected growth in larger deployments.
+- Access credentials for an OpenAI-compatible chat completion engine. This engine should offer a model with strength comparable to `gpt-4o-mini` or better. Weaker models seem to stumble over the knowledge wiki system, at least with the currently implemented prompting strategy.
+
+# Knowledge Authoring
+
+See [book/README.md](book/README.md) for details. The contents of the `book/` folder are made as `/book` inside of the OWUI container. These files are re-read during each chat-completion request, so the assistant's knowledge is always up to date. Rather than editing these files in a text editor by hand, we recommend using the [GitBook](https://www.gitbook.com/) authoring interface. This will help identify and fix broken links and keep the page index (`SUMMARY.md`) up to date. In a pinch, small, single-file edits can be made directly on GitHub.
+
+# Provisioning
+
+Setting up a Digital Ocean droplet (recommended):
+- Access your Digital Ocean control panel: https://cloud.digitalocean.com/
+- Create > Droplet
+- Region > San Francisco
+- Datacenter > SFO2
+- Image > Marketplace > Docker on Ubuntu 22.04
+- Size > Basic > Regular > $12/mo
+- Backups > Enable > Weekly $2.40/mo (probably a good idea, but obviously optional)
+- Authentication > SSH key > select one you've created on your computer
+- Improved Metrics > Enabled
+
+Setting up an OpenAI account (recommended):
+- Sign up at https://platform.openai.com/docs/overview
+- (optional) Fund your account your account so you aren't subject to the free trial model and rate-limit constraints.
+
+Setting up DNS (recommended):
+- Point your desired domain name (e.g. `brace.adamsmith.as`) as the IP address of the virtual machine you created above.
+
+Test access and authorization:
+- In your computer's terminal, adapt this command for your domain name: `ssh root@brace.adamsmith.as`
+- Once connected via SSH, run `docker version` to verify that Docker is running.
+
+# Deployment
+
+I'll write more in this section after I verify the provisioning instructions above work well enough.
+
+--
 
 
 Look at `compose.yaml` for some Docker Compose deployment details.
@@ -7,6 +65,8 @@ Useful commands:
  - `sudo docker compose up -d`
  - `sudo docker compose down`
  - `sudo docker compose logs -f`
+
+# System 
 
 Todo:
 - write up requirements
