@@ -1,2 +1,12 @@
-# brace-kb
-Knowledge base for Brace, an LLM-based course assistant
+---
+description: 'You have accessto the following thingies:'
+---
+
+# Home
+
+* [self-knowledge](self-knowledge.md)
+* [quizzes](broken-reference)
+* feedback surveys
+* profile builder
+* admin tools
+
