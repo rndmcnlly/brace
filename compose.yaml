@@ -1,13 +1,35 @@
 services:
-  open-webui:
+  owui:
     image: ghcr.io/open-webui/open-webui:main
-    container_name: open-webui
+    container_name: owiu
     ports:
-      - "3000:3000"
-    volumes:
-      - open-webui:/app/backend/data
-      - ./book:/book:ro
+      - "3000:8080"
+    volumes: [] # ["owui-data": "/app/backend/data"]
     restart: always
+    environment:
+      WEBUI_AUTH: $WEBUI_AUTH
+      WEBUI_NAME: Brace
+      ENABLE_SIGNUP: false
+      USER_PERMISSIONS_CHAT_DELETION: false
+      USER_PERMISSIONS_CHAT_EDITING: false
+      USER_PERMISSIONS_CHAT_TEMPORARY: false
+      ENABLE_MESSAGE_RATING: false
+      ENABLE_COMMUNITY_SHARING: false
+      ENABLE_OLLAMA_API: false
+      ENABLE_OPENAI_API: true
+      AUDIO_STT_ENGINE: openai
+      AUDIO_TTS_ENGINE: openai
+      OPENAI_API_BASE_URL: http://pipelines:9099
+      OPENAI_API_KEY: "0p3n-w3bu!"
+
+  pipelines:
+    image: ghcr.io/open-webui/pipelines:main
+    container_name: pipelines
+    env_file: openai.env
+    volumes:
+      - ./pipelines:/pipelines:ro
+      - ./book:/book:ro
+    entrypoint: ["/bin/bash", "-c",  "cp -r /pipelines/* /app/pipelines && ./start.sh"]
 
 volumes:
-  open-webui:
+  owui-data:
