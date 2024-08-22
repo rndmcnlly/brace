@@ -6,6 +6,7 @@ services:
       - "3000:8080"
     volumes: [] # ["owui-data": "/app/backend/data"]
     restart: always
+    env_file: openai.env
     environment:
       WEBUI_AUTH: $WEBUI_AUTH
       WEBUI_NAME: Brace
