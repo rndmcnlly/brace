@@ -71,7 +71,12 @@ For production deployments:
 - Run `docker compose up -d`
 - Monitor the deployment with `docker compose logs -f`
 
-Once running, you can access that chat interface at `TODO`.
+Once running, you can access that chat interface at [http://localhost:3000](http://localhost:3000).
+
+Unfortunately, there are some remaining manual setup steps:
+- In OWUI, find Workspace > Models > Import Models.
+- Upload [character-models.json](character-models.json) to create the Brace character.
+- On that same page, hide all of the OpenAI models. (Shift-click to hide multiple models at once.)
 
 If you are experimentally making changes to pipelines or knowledge data, it is enough to run `docker compose restart pipelines`. This will allow the chat interface to stay running.
 

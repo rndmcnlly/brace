@@ -21,6 +21,9 @@ services:
       AUDIO_TTS_ENGINE: openai
       OPENAI_API_BASE_URL: http://pipelines:9099
       OPENAI_API_KEY: "0p3n-w3bu!"
+      ENABLE_MODEL_FILTER: true
+      MODEL_FILTER_LIST: brace
+      DEFAULT_MODELS: brace
 
   pipelines:
     image: ghcr.io/open-webui/pipelines:main
