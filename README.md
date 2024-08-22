@@ -93,8 +93,5 @@ Follow the test deployment directions above to test your changes locally before 
 ## Administration
 
 *TODO*:
- - how do you create/maintain characters / front end models?
- - how do you bulk-import users?
  - how do you configure mintoring with langfuse?
  - how do you enable rate limiting?
- - how do you change the default back end model?
