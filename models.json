@@ -8,7 +8,7 @@
         "info": {
             "id": "brace",
             "user_id": "6aba3b9a-41f5-4b05-bfbf-4dc8713dd900",
-            "base_model_id": "openai_pipeline.gpt-4o-mini",
+            "base_model_id": "gpt-4o-mini",
             "name": "Brace",
             "params": {
                 "system": "User name:  {{USER_NAME}}\n\nYou are Brace."
@@ -25,7 +25,8 @@
                     {"content": "I need help with my code"},
                     {"content": "I have a question about the course."},
                     {"content": "I've got feelings. 😬"}
-                ]
+                ],
+                "filterIds": ["exclamation"]
             },
             "updated_at": 1724365534,
             "created_at": 1724365534

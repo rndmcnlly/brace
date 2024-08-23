@@ -4,13 +4,25 @@ services:
     container_name: owiu
     ports:
       - "3000:8080"
-    volumes: [] # ["owui-data": "/app/backend/data"]
+    volumes:
+      - owui-data:/app/backend/data
+      - ./book:/book:ro
+      - ./models.json:/app/backend/models.json:ro
+      - ./functions:/functions:ro
+      - ./functions.json:/app/backend/functions.json:ro
+      - ./custom_start.sh:/app/backend/custom_start.sh:ro
+      - ./custom_start.py:/app/backend/custom_start.py:ro
+    entrypoint: ["bash", "/app/backend/custom_start.sh"]
     restart: always
     env_file: openai.env
     environment:
       WEBUI_AUTH: $WEBUI_AUTH
       WEBUI_NAME: Brace
-      ENABLE_SIGNUP: false
+      #ENABLE_SIGNUP: false
+      ENABLE_OAUTH_SIGNUP: true
+      OAUTH_CLIENT_ID: 983390070894-dlujcnq4qhds6upk297r2cp1utshjdkf.apps.googleusercontent.com
+      OAUTH_CLIENT_SECRET: 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
+      OPENID_PROVIDER_URL: https://accounts.google.com/.well-known/openid-configuration
       USER_PERMISSIONS_CHAT_DELETION: false
       USER_PERMISSIONS_CHAT_EDITING: false
       USER_PERMISSIONS_CHAT_TEMPORARY: false
@@ -20,20 +32,8 @@ services:
       ENABLE_OPENAI_API: true
       AUDIO_STT_ENGINE: openai
       AUDIO_TTS_ENGINE: openai
-      OPENAI_API_BASE_URL: http://pipelines:9099
-      OPENAI_API_KEY: "0p3n-w3bu!"
       ENABLE_MODEL_FILTER: true
       MODEL_FILTER_LIST: brace
       DEFAULT_MODELS: brace
-
-  pipelines:
-    image: ghcr.io/open-webui/pipelines:main
-    container_name: pipelines
-    env_file: openai.env
-    volumes:
-      - ./pipelines:/pipelines:ro
-      - ./book:/book:ro
-    entrypoint: ["/bin/bash", "-c",  "cp -r /pipelines/* /app/pipelines && ./start.sh"]
-
 volumes:
   owui-data:

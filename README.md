@@ -80,18 +80,18 @@ Unfortunately, there are some remaining manual setup steps:
 
 If you are experimentally making changes to pipelines or knowledge data, it is enough to run `docker compose restart pipelines`. This will allow the chat interface to stay running.
 
+The OAuth stuff is setup to allow authentication with `@ucsc.edu` accounts when the server is running on `localhost:3000`. Contact `amsmith@ucsc.edu` if this needs to change.
+
 ## Public Access
 
 *TODO: Write something about how to configure nginx for https access to the chat interface.*
 
-## Development
-
-Check out [/pipelines](/pipelines) for pipelines that get injected into the system on startup. See also the [Pipelines Documentation](https://github.com/open-webui/pipelines).
-
-Follow the test deployment directions above to test your changes locally before committing them.
-
-## Administration
-
-*TODO*:
- - how do you configure mintoring with langfuse?
- - how do you enable rate limiting?
+# TODO
+- figure out how to make filters active/enabled by default 
+- implement the knowledge wiki filter
+- implement a rate limiting filter, but leave it disabled
+- implement a langfuse monitoring filter, but leave it disabled
+- nginx + cerbot as front end proxy (don't forget to disable buffering for websockets)
+- populate Brace's dry (no wiki) system prompt
+- populate Brace's wet (wiki) system prompt
+- populate the wiki with some useful content

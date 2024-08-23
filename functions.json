@@ -1,0 +1,9 @@
+[
+    {
+      "id": "exclamation",
+      "name": "Exclamation filter",
+      "meta": {
+        "description": "Adds an exclamation mark to the end of last message on outlet."
+      }
+    }
+  ]
