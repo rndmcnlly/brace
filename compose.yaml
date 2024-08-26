@@ -19,46 +19,49 @@ services:
       - ./letsencrypt:/letsencrypt
     restart: always
 
-  # owui:
-  #   image: ghcr.io/open-webui/open-webui:main
-  #   expose:
-  #     - 8080
-  #   ports:
-  #     - 3000:8080
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.owui.rule=Host(`chat.brace.tools`)"
-  #   volumes:
-  #     - owui-data:/app/backend/data
-  #     - ./book:/book:ro
-  #     - ./models.json:/app/backend/models.json:ro
-  #     - ./functions:/functions:ro
-  #     - ./functions.json:/app/backend/functions.json:ro
-  #     - ./custom_start.sh:/app/backend/custom_start.sh:ro
-  #     - ./custom_start.py:/app/backend/custom_start.py:ro
-  #   entrypoint: ["bash", "/app/backend/custom_start.sh"]
-  #   restart: always
-  #   env_file: openai.env
-  #   environment:
-  #     WEBUI_NAME: Brace
-  #     ENABLE_SIGNUP: false
-  #     ENABLE_OAUTH_SIGNUP: true
-  #     OAUTH_CLIENT_ID: 983390070894-dlujcnq4qhds6upk297r2cp1utshjdkf.apps.googleusercontent.com
-  #     OAUTH_CLIENT_SECRET: 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
-  #     OPENID_PROVIDER_URL: https://accounts.google.com/.well-known/openid-configuration
-  #     USER_PERMISSIONS_CHAT_DELETION: false
-  #     USER_PERMISSIONS_CHAT_EDITING: false
-  #     USER_PERMISSIONS_CHAT_TEMPORARY: false
-  #     ENABLE_MESSAGE_RATING: false
-  #     ENABLE_COMMUNITY_SHARING: false
-  #     ENABLE_OLLAMA_API: false
-  #     ENABLE_OPENAI_API: true
-  #     AUDIO_STT_ENGINE: openai
-  #     AUDIO_TTS_ENGINE: openai
-  #     RAG_EMBEDDING_ENGINE: openai
-  #     ENABLE_MODEL_FILTER: true
-  #     MODEL_FILTER_LIST: brace
-  #     DEFAULT_MODELS: brace
+  owui:
+    image: ghcr.io/open-webui/open-webui:main
+    expose:
+      - 8080
+    ports:
+      - 3000:8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.owui.rule=Host(`chat.brace.tools`)"
+      - "traefik.http.routers.landing.entrypoints=websecure"
+      - "traefik.http.routers.landing.tls=true"
+      - "traefik.http.routers.landing.tls.certresolver=myresolver"
+    volumes:
+      - owui-data:/app/backend/data
+      - ./book:/book:ro
+      - ./models.json:/app/backend/models.json:ro
+      - ./functions:/functions:ro
+      - ./functions.json:/app/backend/functions.json:ro
+      - ./custom_start.sh:/app/backend/custom_start.sh:ro
+      - ./custom_start.py:/app/backend/custom_start.py:ro
+    entrypoint: ["bash", "/app/backend/custom_start.sh"]
+    restart: always
+    env_file: openai.env
+    environment:
+      WEBUI_NAME: Brace
+      ENABLE_SIGNUP: false
+      ENABLE_OAUTH_SIGNUP: true
+      OAUTH_CLIENT_ID: 983390070894-dlujcnq4qhds6upk297r2cp1utshjdkf.apps.googleusercontent.com
+      OAUTH_CLIENT_SECRET: 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
+      OPENID_PROVIDER_URL: https://accounts.google.com/.well-known/openid-configuration
+      USER_PERMISSIONS_CHAT_DELETION: false
+      USER_PERMISSIONS_CHAT_EDITING: false
+      USER_PERMISSIONS_CHAT_TEMPORARY: false
+      ENABLE_MESSAGE_RATING: false
+      ENABLE_COMMUNITY_SHARING: false
+      ENABLE_OLLAMA_API: false
+      ENABLE_OPENAI_API: true
+      AUDIO_STT_ENGINE: openai
+      AUDIO_TTS_ENGINE: openai
+      RAG_EMBEDDING_ENGINE: openai
+      ENABLE_MODEL_FILTER: true
+      MODEL_FILTER_LIST: brace
+      DEFAULT_MODELS: brace
 
   landing:
     image: nginx:alpine

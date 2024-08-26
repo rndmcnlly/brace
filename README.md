@@ -65,7 +65,7 @@ Clone this repository. If you followed the provisioning steps above, you will en
 Collect your OpenAI credentials (e.g. `OPENAI_AI_KEY`) into `openai.env`. This file is read when stack starts up.
 
 For test deployments:
-- Run `WEBUI_AUTH=false docker compose up -d` (This will bypass the authentication system in OWUI, allowing password-less login as a single admin user.)
+- Run `docker compose up owui -d` (This brings up only the chat service, not the reverse proxy to put all this stuff on one domain.)
 
 For production deployments:
 - Run `docker compose up -d`
