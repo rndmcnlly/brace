@@ -21,7 +21,7 @@ Brace is composed of four major components:
 ## System Requirements
 
 Before you deploy Brace, make sure you are willing to provide the following:
-- A (virtual) machine with more than 1GB of RAM, e.g. from [DigitalOcean](https://www.digitalocean.com/). In preliminary testing, the system seems to idle at ~800MB of RAM usage, but this leaves little room for unexpected growth in larger deployments.
+- A (virtual) machine with about 1GB of RAM, e.g. from [DigitalOcean](https://www.digitalocean.com/). In preliminary testing, the system seems to idle at ~500MB of RAM usage, but this leaves little room for unexpected growth in larger deployments.
 - Access credentials for an OpenAI-compatible chat completion engine. This engine should offer a model with strength comparable to `gpt-4o-mini` or better. Weaker models seem to stumble over the knowledge wiki system, at least with the currently implemented prompting strategy.
 
 ## Knowledge Authoring
