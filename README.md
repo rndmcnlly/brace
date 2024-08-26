@@ -65,9 +65,11 @@ Clone this repository. If you followed the provisioning steps above, you will en
 Collect your OpenAI credentials (e.g. `OPENAI_AI_KEY`) into `openai.env`. This file is read when stack starts up.
 
 For test deployments:
-- Run `docker compose up owui -d` (This brings up only the chat service, not the reverse proxy to put all this stuff on one domain.)
+- Run `docker network create web` (This creates dummy network. In deployment, you'd provide a real network.)
+- Run `docker compose up`
 
 For production deployments:
+- Use some other docker stack to provide a `traefik`-based reverse proxy on the `web` network.
 - Run `docker compose up -d`
 - Monitor the deployment with `docker compose logs -f`
 
