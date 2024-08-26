@@ -28,9 +28,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.owui.rule=Host(`chat.brace.tools`)"
-      - "traefik.http.routers.landing.entrypoints=websecure"
-      - "traefik.http.routers.landing.tls=true"
-      - "traefik.http.routers.landing.tls.certresolver=myresolver"
+      - "traefik.http.routers.owui.entrypoints=websecure"
+      - "traefik.http.routers.owui.tls=true"
+      - "traefik.http.routers.owui.tls.certresolver=myresolver"
     volumes:
       - owui-data:/app/backend/data
       - ./book:/book:ro
