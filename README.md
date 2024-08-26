@@ -12,11 +12,12 @@ Brace offers:
 
 ## Overview
 
-Brace is composed of four major components:
+Brace is composed of three major components:
 - A **front-end chat interface** based on [Open WebUI](https://github.com/open-webui/open-webui) (OWUI). OWUI runs inside of a Docker container.
+- A **middle-end assistant character**, Brace, that applies a customized system prompt when chatting with users, consulting the knowledge wiki as needed.
+    - Brace uses a **knowledge wiki** consisting of a collection of linked Markdown documents providing the assistant with specialized knowledge and behavioral instructions relevant to the current conversational context. Unlike mainstream retrieval-augmented generation (RAG) engines, accesses to this wiki are based on explicit and exact lookup of entire documents (rather than implicit lookup of document fragments).
 - A **back-end chat-completion engine** based on the [OpenAI Chat Completions API](https://platform.openai.com/docs/guides/chat-completions) (which is implemented by may providers beyond OpenAI).
-- A **knowledge wiki** consisting of a collection of linked Markdown documents providing the assistant with specialized knowledge and behavioral instructions relevant to the current conversational context. Unlike mainstream retrieval-augmented generation (RAG) engines, accesses to this wiki are based on explicit and exact lookup of entire documents (rather than implicit lookup of document fragments).
-- An **assistant character**, Brace, that applies a customized system prompt when chatting with users, consulting the knowledge wiki as needed.
+
 
 ## System Requirements
 
@@ -48,10 +49,10 @@ Setting up an OpenAI account (recommended):
 - (optional) Fund your account your account so you aren't subject to the free trial model and rate-limit constraints.
 
 Setting up DNS (recommended):
-- Point your desired domain name (e.g. `brace.adamsmith.as`) as the IP address of the virtual machine you created above.
+- Point your desired domain name (e.g. `brace.tools`) at the IP address of the virtual machine you created above.
 
 Testing remote access to Docker:
-- In your computer's terminal, adapt this command for your domain name: `ssh root@brace.adamsmith.as`
+- In your computer's terminal, adapt this command for your domain name: `ssh root@brace.tools`
 - Once connected via SSH, run `docker version` to verify that Docker is running.
 
 Generate deployment keys (these allow your Docker host to pull from this repository)
@@ -76,17 +77,10 @@ For production deployments:
 Once running, you can access that chat interface at [http://localhost:3000](http://localhost:3000).
 
 Unfortunately, there are some remaining manual setup steps:
-- In OWUI, find Workspace > Models > Import Models.
-- Upload [character-models.json](character-models.json) to create the Brace character.
-- On that same page, hide all of the OpenAI models. (Shift-click to hide multiple models at once.)
-
-If you are experimentally making changes to pipelines or knowledge data, it is enough to run `docker compose restart pipelines`. This will allow the chat interface to stay running.
+- In OWUI, find Workspace > Models, hide all of the OpenAI models. (Shift-click to hide multiple models at once.)
+- Maybe edit the value of `ENABLE_SIGNUP` in `docker-compose.yml` to `true` (temporarily) to allow yourself to create an admin account.
 
 The OAuth stuff is setup to allow authentication with `@ucsc.edu` accounts when the server is running on `localhost:3000`. Contact `amsmith@ucsc.edu` if this needs to change.
-
-## Public Access
-
-*TODO: Write something about how to configure nginx for https access to the chat interface.*
 
 # TODO
 - figure out how to make filters active/enabled by default 
