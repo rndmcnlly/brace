@@ -69,6 +69,7 @@ services:
       - "traefik.http.routers.landing.rule=Host(`brace.tools`)"
       - "traefik.http.routers.landing.entrypoints=websecure"
       - "traefik.http.routers.landing.tls=true"
+      - "traefik.http.routers.landing.tls.certresolver=myresolver"
 
     restart: always
 
