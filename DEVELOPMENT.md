@@ -1,5 +1,32 @@
 # Development
 
+
+## Submit conversation action
+
+Idea: Offer an Action (a little sparkle in the button bar below a message) to submit the conversation to Canvas.
+
+We know the user's `@ucsc.edu` email address from authentication. However, we'll need to get their Canvas user id. If we have the instructor's access token, we can execute this GraphQL query:
+
+```graphql
+query MyQuery {
+  course(id: "76391") {
+    usersConnection {
+      nodes {
+        id
+        loginId
+        name
+      }
+    }
+  }
+}
+```
+
+When the user presses the sparkle button, we need to use an input box to ask for the assignment URL.
+
+Once we have the assignment url, we can look up the assignment name, figure out the user's name and id, then offer a confirmation box like "Are you sure you want to submit this conversation to the {assignment name} assignment for {user name}?"
+
+We can use status messages to indicate progress, success or failure. In any case, we should never update the conversation content based on the result of this action. Brace should never get causal knowledge of whether the user is enrolled in the course or not, and their user id should never be stored in the conversation history. We can't avoid storing the email address, however, because we need it to authenticate the user in the first place.
+
 ## Knowledge wiki (in progress)
 
 We should `Filter` that adjusts chat history before/after LLM completion to implement this.
