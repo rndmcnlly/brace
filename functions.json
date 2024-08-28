@@ -1,7 +1,7 @@
 [
   {
     "id": "knowledge_wiki",
-    "name": "Knowledge Wiki",
+    "name": "Knowledge Wiki Filter",
     "meta": {
       "description": "Allows models to access the knowledge wiki"
     }
