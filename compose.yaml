@@ -18,6 +18,7 @@ services:
       - owui-data:/app/backend/data
       - ./book:/book:ro
       - ./models.json:/app/backend/models.json:ro
+      - ./brace-logo-symbol.png:/app/backend/brace-logo-symbol.png:ro
       - ./functions:/functions:ro
       - ./functions.json:/app/backend/functions.json:ro
       - ./custom_start.sh:/app/backend/custom_start.sh:ro

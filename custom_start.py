@@ -2,6 +2,8 @@ import os
 import json
 import logging
 import shutil
+import base64
+import mimetypes
 
 os.environ["WEBUI_SECRET_KEY"] = "..."
 from apps.webui.models.models import Models, ModelForm
@@ -37,6 +39,11 @@ with open("functions.json") as f:
 with open("models.json") as f:
     models_specifications = json.load(f)
     for spec in models_specifications:
+        if spec["info"]["meta"]["profile_image_url"].startswith("@"):
+            filename = spec["info"]["meta"]["profile_image_url"][1:]
+            mimetype, _ = mimetypes.guess_type(filename)
+            data = open(filename, "rb").read()
+            spec["info"]["meta"]["profile_image_url"] = f"data:{mimetype};base64,{base64.b64encode(data).decode('utf-8')}"
         form_data = ModelForm(**spec["info"])
         if model := Models.get_model_by_id(form_data.id):
             print(f"Updating model: {form_data.id}")
