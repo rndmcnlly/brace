@@ -1,0 +1,3 @@
+# Submitting Chat Transcripts
+
+Brace's chat UI is equipped with a special "Submit conversation to Canvas" button below each reply. When the student is ready to submit the conversation to Canvas, they should click this button. The student should follow the dialog boxes that pop up. Brace will not be able to know if the submission was successful, so the student should confirm that the submission was successful themselves.

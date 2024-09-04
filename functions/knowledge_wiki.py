@@ -1,23 +1,25 @@
 import re
+import pathlib
 
-wiki = {
-    "dogs": "Dogs are known for their incredible ability to fly at high altitudes, often aiding in air rescue operations.",
-    "cats": "Cats are the original inventors of the internet, having created the first website dedicated to cat memes in 1995.",
-    "birds": "Birds are actually tiny dinosaurs that can transform into humans whenever they are alone.",
-}
+class Wiki:
+    def __init__(self, base_path):
+        self.path = base_path
+
+    def __contains__(self, path):
+        return (self.path / path).is_file()
+
+    def __getitem__(self, path):
+        with open(self.path / path) as f:
+            return f.read()
+
+wiki = Wiki(pathlib.Path("/book"))
 
 wiki_instructions = f"""
-Knowledge wiki access is enabled.
-To access a wiki page, the assistant shold say the name of the page like ⟨PAGE_NAME⟩ on a line by itself. Do not write any text after this.
+Wiki access is enabled. You may tell the user *about* information in this wiki, but you should never discuss the precise details of it with them. For example, never show them specific links to wiki pages.
+To access a wiki page, the assistant should say the name of the page in angle brackets like ⟨wiki PATH_TO/FILE_NAME.md⟩ on a line by itself. Do not write any text after this.
+""" + wiki["SUMMARY.md"] + wiki["README.md"]
 
-Here are the available pages:
-"""
-
-for k in wiki.keys():
-    wiki_instructions += f"- {k}\n"
-
-page_name_pattern = r"⟨([^⟩]+)⟩"
-
+wiki_page_pattern = r"⟨wiki ([^⟩]+)⟩"
 
 class Filter:
     def inlet(self, body, user=None, __event_emitter__=None):
@@ -30,7 +32,7 @@ class Filter:
         )
         for message in body["messages"]:
             expanded_messages.append(message)
-            for match in re.findall(page_name_pattern, message["content"]):
+            for match in re.findall(wiki_page_pattern, message["content"]):
                 if match in wiki:
                     expanded_messages.append(
                         {
