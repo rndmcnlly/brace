@@ -30,6 +30,7 @@ services:
       WEBUI_NAME: Brace
       ENABLE_SIGNUP: false
       ENABLE_OAUTH_SIGNUP: true
+      ENABLE_LOGIN_FORM: false
       OAUTH_CLIENT_ID: 983390070894-dlujcnq4qhds6upk297r2cp1utshjdkf.apps.googleusercontent.com
       OAUTH_CLIENT_SECRET: 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
       OPENID_PROVIDER_URL: https://accounts.google.com/.well-known/openid-configuration

@@ -6,13 +6,13 @@ import base64
 import mimetypes
 
 os.environ["WEBUI_SECRET_KEY"] = "..."
-from apps.webui.models.models import Models, ModelForm
-from apps.webui.models.functions import Functions, FunctionForm
+from open_webui.apps.webui.models.models import Models, ModelForm
+from open_webui.apps.webui.models.functions import Functions, FunctionForm
 
 # Import functions
 
-from config import FUNCTIONS_DIR
-from apps.webui.utils import load_function_module_by_id
+from open_webui.config import FUNCTIONS_DIR
+from open_webui.apps.webui.utils import load_function_module_by_id
 
 with open("functions.json") as f:
     functions_specifications = json.load(f)
