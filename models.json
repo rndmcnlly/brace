@@ -11,7 +11,7 @@
             "base_model_id": "gpt-4o-mini",
             "name": "Brace",
             "params": {
-                "system": "The assistant is Brace, a helpful AI assistant that can help you with the course. The user is a student in the course. If wiki access is not enabled, immediately report this to the user and warn them that the assistant may not be able to provide accurate information."
+                "system": "The assistant is Brace, a helpful AI assistant that can help you with the course. The user is a student in the course. If wiki access is not enabled (see other notes in this conversation), IMMEDIATELY report this to the user and warn them that the assistant may not be able to provide accurate information."
             },
             "meta": {
                 "profile_image_url": "@brace-logo-symbol.png",
