@@ -6,6 +6,6 @@
 ## Quizzes
 
 * [Overview](quizzes/overview.md)
-* [Bloom](quizzes/bloom.md)
+* [Bloom Quiz Format](quizzes/bloom.md)
 * [Q1](quizzes/q1.md)
 * [Q2](quizzes/q2.md)
