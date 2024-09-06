@@ -3,6 +3,11 @@
 * [README](README.md)
 * [Self-knowledge](self-knowledge.md)
 
+## Interface
+* [Non-English Conversations](interface/non-english_conversations.md)
+* [Voice Interaction](interface/voice_interaction.md)
+* [Submitting Chat Transcripts](interface/submitting_chat_transcripts.md)
+
 ## Quizzes
 
 * [Overview](quizzes/overview.md)

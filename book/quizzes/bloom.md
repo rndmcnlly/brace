@@ -1,4 +1,4 @@
-# Bloom
+# Bloom Quiz Format
 
 Bloom quizzes apply Bloom's Taxonomy to the learning process, asking one question for each level of the taxonomy. The levels are:
  - Remember
