@@ -91,3 +91,29 @@ The OAuth stuff is setup to allow authentication with `@ucsc.edu` accounts when 
 - populate Brace's dry (no wiki) system prompt
 - populate Brace's wet (wiki) system prompt
 - populate the wiki with some useful content
+
+# Diagrams
+
+```mermaid
+flowchart TD
+
+    student((Student))
+    instructor((Instructor))
+
+    subgraph server
+        owui[Open WebUI]
+        assistant(((Assistant)))
+        wiki[(Knowledge Wiki)]
+    end
+
+    canvas[(Canvas LMS)]
+    llm[[Commercially-hosted LLM]]
+    
+    instructor -.-> assistant & wiki & canvas
+    student <-->|discover activities| canvas
+    student <==> owui
+    owui <--> assistant
+    assistant --submit conversations--> canvas
+    assistant --load instructions--> wiki
+    owui <==text completions====> llm
+```
