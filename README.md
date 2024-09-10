@@ -164,3 +164,47 @@ sequenceDiagram
     L ->>- A: 
     A ->>- U: "Question 1: ..."
 ```
+
+## Submission flow
+```mermaid
+sequenceDiagram
+    actor U as User
+    participant I as Chat Interface
+    participant C as Canvas LMS
+
+    U <<-->> I: {authenticate with some institutional email address}
+    U <<-->> I: {many conversation turns}
+
+    U ->> I: Click: Submit to Canvas.
+    I ->> I: Render conversation as HTML for easy viewing in SpeedGrader
+    I ->> U: Status: Gathering information...
+    I ->> U: Prompt: Assignment URL?
+    U ->> I: "https://canvas/courses/{course_id}/assignments/{assignment_id}"
+
+    par using instructor's credentials
+        I ->>+ C: Get all enrolleded students in {course_id}.
+        I ->> C: Get details for {assignment_id} in {course_id}.
+    end
+    C ->>- I: Results (might be cached)
+
+    I ->> I: Try to infer {assignment_name} and {student_name}.
+
+    alt
+        I ->> U: Status: Submission failed (user not enrolled).
+    else
+        I ->> U: Status: Submission failed (assignment not available).
+    else
+        I ->> U: Confirm: Submit to {assignent_name} as {student_name}?
+        alt
+            U ->> I: Click: Cancel
+            I ->> U: Status: Submission abandoned.
+        else
+            U ->> I: Click: Okay
+            critical using instructor's credentials
+                I ->>+ C: Submit on behalf of student.
+                C ->>- I: Submission complete.
+            end
+            I ->> U: Status: Submission complete.
+        end
+    end
+```
