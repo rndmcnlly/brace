@@ -127,20 +127,40 @@ sequenceDiagram
     actor U as User
     participant A as Assistant
     participant W as Wiki
+    participant L as LLM
 
-    U ->> A: "I wanna do Quiz 2."
-    A -->> W: Load initial instructions
+    U ->>+ A: "I wanna do Quiz 2."
 
-    W -->> A: {wiki usage instructions}
-    W -->> A: {contents of SUMMARY.md}<br/>(all wiki page filenames)
-    W -->> A: {contents of README.md}
+    critical Wiki setup happens at start of every conversation.
+        A ->> W: Load initial instructions
+        W ->> A: {introduce ⟨wiki _.md⟩ command syntax}
+        W ->> A: {list of all wiki page filenames}
+        W ->> A: {contents of README.md}
+    end
 
-    A ->> U: "Sure, let me look up the details.<br/>⟨wiki quizzes/Q2.md⟩"
+    
+    A ->>+ L: Generate assistant reply
+    L -->> A: {streaming response}
+    A -->> U: "Sure, let me look up the details.<br/>⟨wiki quizzes/Q2.md⟩"
+    L ->>- A: {message complete}
 
-    U ->> A: {auto-continue because message ends in "⟩"}
+    loop Auto-continue when message ends with "⟩".
+        A ->>- U: {message complete}
+        U ->>+ A: {continue last assistant message}
+    end
 
-    A -->> W: Load quizzes/Q2.md
-    W -->> A: {contents of quizzes/Q2.md}
+    loop Process each ⟨wiki _.md⟩ command<br>in all past assistant messages.
+        A ->> W: Load quizzes/Q2.md
+        W ->> A: {contents of quizzes/Q2.md}
+    end
 
-    A ->> U: "Quiz 2 is about dog training. Ready to start?" 
+    A ->>+ L: 
+    L ->>- A: 
+
+    A ->>- U: "Quiz 2 is about dog training. Ready to start?"
+
+    U ->>+ A: "Yeah."
+    A ->>+ L: 
+    L ->>- A: 
+    A ->>- U: "Question 1: ..."
 ```
