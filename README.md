@@ -94,6 +94,8 @@ The OAuth stuff is setup to allow authentication with `@ucsc.edu` accounts when 
 
 # Diagrams
 
+## Architecture
+
 ```mermaid
 flowchart TD
 
@@ -116,4 +118,29 @@ flowchart TD
     assistant --submit conversations--> canvas
     assistant --load instructions--> wiki
     owui <==text completions====> llm
+```
+
+## Wiki interaction
+
+```mermaid
+sequenceDiagram
+    actor U as User
+    participant A as Assistant
+    participant W as Wiki
+
+    U ->> A: "I wanna do Quiz 2."
+    A -->> W: Load initial instructions
+
+    W -->> A: {wiki usage instructions}
+    W -->> A: {contents of SUMMARY.md}<br/>(all wiki page filenames)
+    W -->> A: {contents of README.md}
+
+    A ->> U: "Sure, let me look up the details.<br/>⟨wiki quizzes/Q2.md⟩"
+
+    U ->> A: {auto-continue because message ends in "⟩"}
+
+    A -->> W: Load quizzes/Q2.md
+    W -->> A: {contents of quizzes/Q2.md}
+
+    A ->> U: "Quiz 2 is about dog training. Ready to start?" 
 ```
