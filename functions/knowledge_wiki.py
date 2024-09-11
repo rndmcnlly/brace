@@ -15,8 +15,8 @@ class Wiki:
 wiki = Wiki(pathlib.Path("/book"))
 
 wiki_instructions = f"""
-Wiki access is enabled. You may tell the user *about* information in this wiki, but you should never discuss the precise details of it with them. For example, never show them specific links to wiki pages.
-To access a wiki page, the assistant should say the name of the page in angle brackets like ⟨wiki PATH_TO/FILE_NAME.md⟩ on a line by itself. Do not write any text after this.
+Wiki access is enabled.
+To access a wiki page, the assistant should say the name of the page in angle brackets like ⟨wiki PATH_TO/FILE_NAME.md⟩ on a line by itself. If your message ends with a wiki page reference, the interface will automatically allow you to continue your response after providing the page content.
 """ + wiki["SUMMARY.md"] + wiki["README.md"]
 
 wiki_page_pattern = r"⟨wiki ([^⟩]+)⟩"
