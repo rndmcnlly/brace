@@ -16,13 +16,14 @@ Brace is composed of three major components:
 - A **front-end chat interface** based on [Open WebUI](https://github.com/open-webui/open-webui) (OWUI). OWUI runs inside of a Docker container.
 - A **middle-end assistant character**, Brace, that applies a customized system prompt when chatting with users, consulting the knowledge wiki as needed.
     - Brace uses a **knowledge wiki** consisting of a collection of linked Markdown documents providing the assistant with specialized knowledge and behavioral instructions relevant to the current conversational context. Unlike mainstream retrieval-augmented generation (RAG) engines, accesses to this wiki are based on explicit and exact lookup of entire documents (rather than implicit lookup of document fragments).
+    - Brace allows students to submit conversation transcripts directly to assigments on the **Canvas LMS** (assuming they accept submissions in the form of HTML file uploads).
 - A **back-end chat-completion engine** based on the [OpenAI Chat Completions API](https://platform.openai.com/docs/guides/chat-completions) (which is implemented by may providers beyond OpenAI).
 
 
 ## System Requirements
 
 Before you deploy Brace, make sure you are willing to provide the following:
-- A (virtual) machine with about 1GB of RAM, e.g. from [DigitalOcean](https://www.digitalocean.com/). In preliminary testing, the system seems to idle at ~500MB of RAM usage, but this leaves little room for unexpected growth in larger deployments.
+- A (virtual) machine with about 1GB of RAM, e.g. from [DigitalOcean](https://www.digitalocean.com/). In preliminary testing, the system seems to idle at ~500MB of RAM usage, but this leaves little room for unexpected growth in larger deployments that add services around Brace. We recommend 2GB of RAM for comfortable deployments.
 - Access credentials for an OpenAI-compatible chat completion engine. This engine should offer a model with strength comparable to `gpt-4o-mini` or better. Weaker models seem to stumble over the knowledge wiki system, at least with the currently implemented prompting strategy.
 
 ## Knowledge Authoring
@@ -82,15 +83,25 @@ Unfortunately, there are some remaining manual setup steps:
 
 The OAuth stuff is setup to allow authentication with `@ucsc.edu` accounts when the server is running on `localhost:3000`. Contact `amsmith@ucsc.edu` if this needs to change.
 
-# TODO
+# TODO (to get ready for course start)
 - figure out how to make filters active/enabled by default 
-- implement the knowledge wiki filter
 - implement a rate limiting filter, but leave it disabled
 - implement a langfuse monitoring filter, but leave it disabled
 - nginx + cerbot as front end proxy (don't forget to disable buffering for websockets)
 - populate Brace's dry (no wiki) system prompt
 - populate Brace's wet (wiki) system prompt
 - populate the wiki with some useful content
+
+# TODO (to generalize for new courses)
+- document expected usage patterns (e.g. typical number of conversation, turn depth, and token balance)
+- implement enrollment filter?
+    - at the start of every conversation, a filter uses a cached view of enrollment to decide if the current user is allowed to proceed with conversation, throw exception to kill convo otherwise
+    - does this violate our principle of not proving enrollment in the transcripts?
+- move course-specific data out of repo
+    - think about how to have the dry system propmt also be configurable via file system
+    - `/book` should just be example content under the assumption that future deployments will volume-mount another directory on top of this
+    - think about whether the wiki pages can be pulled from Canvas pages on the fly (e.g. from an unpublished folder so that they aren't visible to students but are visible to )
+- onboarding instuctions for both instructors and students!
 
 # Diagrams
 
