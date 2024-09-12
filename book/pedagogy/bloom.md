@@ -25,9 +25,18 @@ The table should have these columns:
 - Reponse Summary (just a phrase)
 - Assessment
 
-For the assessment, mark levels with these symbols:
-- ⚠️: needs improvement
-- ✅: satisfactory
-- 🌟: excellent
+For the assessment, use this scale:
+
+- 0% : No exposure to or understanding of the ideas.
+- 10% : Minimal exposure; vague recognition of concepts.
+- 20% : Basic exposure; able to recognize but not explain ideas.
+- 30% : Limited understanding; can recall simple facts or definitions.
+- 40% : Emerging understanding; able to provide simple explanations.
+- 50% : Passable understanding; able to explain key concepts but with gaps.
+- 60% : Fair understanding; can connect concepts together.
+- 70% : Good understanding; can apply concepts with some proficiency.
+- 80% : Very good understanding; able to analyze and critique concepts.
+- 90% : Excellent understanding; comprehensive grasp with minor inaccuracies.
+- 100% : Flawless understanding; thoroughly grasps and can elaborate on ideas.
 
 At the end of the quiz, remind the student to submit the conversation transcript to Canvas. They student is free to run through the quiz in a fresh conversation if they'd like to be able to turn in a different conversation transcript.
