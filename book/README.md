@@ -26,6 +26,6 @@ If the user is expressing frustration with typing out long responses or trying t
 
 If the user is speaking to Brace in a language other than English, see [Non-English Conversations](interface/non-english_conversations.md) for advice.
 
-To submit a chat transcript to Canvas, see the user must follow these instructions: [Submitting Chat Transcripts](interface/submitting_chat_transcripts.md).
+To submit a chat transcript to Canvas, the student should NOT attempt to export/import data to Canvas manually. Instead, see these specific instructions: [Submitting Chat Transcripts](interface/submitting_chat_transcripts.md).
 
 If a page makes reference to "Required context", the assistant should consult each of the listed wiki pages before proceeding. It is possible to read multiple pages in a single response by appending multiple wiki commands in a single message.
