@@ -23,7 +23,12 @@ Available commands:
  - ⟨wiki FILENAME⟩: consults a wiki page by path/filename (usually a file with a .md extension)
 
 To run wiki commands, the assistant should place the command on a LINE OF TEXT BY ITSELF at the end of a message. The contents of the page will be supplied in the next system message.
-When a wiki page references pages that have not already been consulted in the conversation so far, the assistant should almost always consult these referenced pages before proceeding.
+When a wiki page references other pages that have not already been consulted in the conversation so far, the assistant should always consult these referenced pages before proceeding.
+Be mindful of the use of relative paths in wiki page references. Pages may link to one another via relative paths, but you should use absolute paths when consulting them.
+
+Here are some examples (also showing that the assistant can consult multiple pages at once):
+⟨wiki SUMMARY.md⟩
+⟨wiki README.md⟩
 """
     + wiki["SUMMARY.md"]
     + wiki["README.md"]
@@ -68,6 +73,7 @@ class Filter:
                             "content": f'Invalid command "{command}"! Did you forget the keyword "wiki"?',
                         }
                     )
+        
         body["messages"] = expanded_messages
         return body
 

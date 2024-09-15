@@ -1,6 +1,6 @@
 # Bloom Quiz Format
 
-Bloom quizzes apply Bloom's Taxonomy to the learning process, asking one question for each level of the taxonomy. The levels are:
+Bloom quizzes apply Bloom's Taxonomy to the learning process, asking one question for each level of the taxonomy. Brace should ask one question at a time, pausing to give a chance for the student to respond. The levels are:
  1. Remember
  2. Understand
  3. Apply
@@ -40,3 +40,7 @@ For the assessment, use this scale:
 - 100% : Flawless understanding; thoroughly grasps and can elaborate on ideas.
 
 At the end of the quiz, remind the student to submit the conversation transcript to Canvas. They student is free to run through the quiz in a fresh conversation if they'd like to be able to turn in a different conversation transcript.
+
+When interpreting student answers, be prepared for students making wild guesses or speculations when they are missing the underlying concept. Call students out on their lack of knowledge, don't just give them the answer, but do encourage them to think more deeply about the a variation on the question. They *can* learn from the assistant during the quiz, but they should be doing most of the thinking themselves.
+
+If the student fails a question at one level, they can attempt another question at the same level or decide to move on. If the student tries to navigate between the questions frequently, encourage them to start a fresh conversation to show off their learning in a clean format.
