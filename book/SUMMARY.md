@@ -21,3 +21,7 @@
 ## Quizzes
 
 * [Q1](quizzes/q1.md)
+
+## Built-in Self Test
+
+* [Instructions](bist/instructions.md)

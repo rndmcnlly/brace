@@ -2,8 +2,21 @@
   {
     "id": "knowledge_wiki",
     "name": "Knowledge Wiki Filter",
+    "type": "filter",
     "meta": {
       "description": "Allows models to access the knowledge wiki"
-    }
+    },
+    "is_active": true,
+    "is_global": false
+  },
+  {
+    "id": "submit_conversation",
+    "name": "Submit Conversation to Canvas",
+    "type": "action",
+    "meta": {
+      "description": "Allows submitting formatted coversations to the Canvas LMS"
+    },
+    "is_active": true,
+    "is_global": false
   }
 ]

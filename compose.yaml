@@ -17,6 +17,7 @@ services:
     volumes:
       - owui-data:/app/backend/data
       - ./book:/book:ro
+      - ./prompts.json:/app/backend/prompts.json:ro
       - ./models.json:/app/backend/models.json:ro
       - ./brace-logo-symbol.png:/app/backend/brace-logo-symbol.png:ro
       - ./functions:/functions:ro

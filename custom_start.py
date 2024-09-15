@@ -6,13 +6,26 @@ import base64
 import mimetypes
 
 os.environ["WEBUI_SECRET_KEY"] = "..."
+
 from open_webui.apps.webui.models.models import Models, ModelForm
 from open_webui.apps.webui.models.functions import Functions, FunctionForm
-
-# Import functions
+from open_webui.apps.webui.models.prompts import Prompts, PromptForm
 
 from open_webui.config import FUNCTIONS_DIR
 from open_webui.apps.webui.utils import load_function_module_by_id
+
+with open("prompts.json") as f:
+    prompt_specifications = json.load(f)
+    for spec in prompt_specifications:
+        form_data = PromptForm(**spec)
+        if prompt := Prompts.get_prompt_by_command(form_data.command):
+            print(f"Updating prompt: {form_data.command}")
+            Prompts.update_prompt_by_command(form_data.command, form_data)
+        else:
+            print(f"Inserting prompt: {form_data.command}")
+            Prompts.insert_new_prompt(form_data.user_id, form_data)
+        
+# Import functions
 
 with open("functions.json") as f:
     functions_specifications = json.load(f)
@@ -21,18 +34,16 @@ with open("functions.json") as f:
         with open(src_function_path, "r") as f:
             spec['content'] = f.read()
         form_data = FunctionForm(**spec)
-        dst_function_path = os.path.join(FUNCTIONS_DIR, f"{form_data.id}.py")
-        with open(dst_function_path, "w") as f:
-            f.write(form_data.content)
-        function_module, function_type, frontmatter = load_function_module_by_id(
-            form_data.id
-        )
         if function := Functions.get_function_by_id(form_data.id):
             print(f"Updating function: {form_data.id}")
             Functions.update_function_by_id(form_data.id, form_data)
         else:
             print(f"Inserting function: {form_data.id}")
-            Functions.insert_new_function("custom-start", function_type, form_data)
+            Functions.insert_new_function("custom-start", spec["type"], form_data)
+        Functions.update_function_by_id(form_data.id, {
+            "is_active": spec["is_active"],
+            "is_global": spec["is_global"]
+        })
 
 # Import models
 
