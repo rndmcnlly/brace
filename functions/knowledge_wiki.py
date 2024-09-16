@@ -11,32 +11,34 @@ class Wiki:
 
     def __getitem__(self, path):
         with open(self.path / path) as f:
-            return f.read()
+            text = f.read()
+            return f"<wiki-page src='{path}'>\n{text}\n</wiki-page>\n"
 
 
 wiki = Wiki(pathlib.Path("/book"))
 
 wiki_instructions = (
     f"""
-Wiki access is enabled. The assistant should use it load additional instructions.
+Wiki access is enabled! The assistant should use it load additional instructions.
 
-Available commands:
- - ⟨wiki FILENAME⟩: consults a wiki page by path/filename (usually a file with a .md extension)
+Available commands (note the use of *mathematical* angle brackets):
+ - ⟨consult FILENAME⟩: consults a wiki page by path/filename (usually a file with a .md extension)
 
 To run wiki commands, the assistant should place the command on a LINE OF TEXT BY ITSELF at the end of a message. The contents of the page will be supplied in the next system message.
 When a wiki page references other pages that have not already been consulted in the conversation so far, the assistant should always consult these referenced pages before proceeding.
-Be mindful of the use of relative paths in wiki page references. Pages may link to one another via relative paths, but you should use absolute paths when consulting them.
+Be mindful of the use of relative paths in wiki page references. Pages may link to one another via relative paths, but you should use canonicalize the paths when consulting them.
 
 Here are some examples (also showing that the assistant can consult multiple pages at once):
-⟨wiki SUMMARY.md⟩
-⟨wiki README.md⟩
+⟨consult SUMMARY.md⟩
+⟨consult README.md⟩
+...
 """
     + wiki["SUMMARY.md"]
     + wiki["README.md"]
 )
 
 command_pattern = r"⟨([^⟩]+)⟩"
-wiki_page_pattern = r"wiki ([^⟩]+)"
+wiki_page_pattern = r"consult (.+)"
 
 
 class Filter:
@@ -57,7 +59,7 @@ class Filter:
                         expanded_messages.append(
                             {
                                 "role": "system",
-                                "content": f'Wiki page data for "{page}":\n{wiki[page]}',
+                                "content": wiki[page],
                             }
                         )
                     else:
@@ -71,7 +73,7 @@ class Filter:
                     expanded_messages.append(
                         {
                             "role": "system",
-                            "content": f'Invalid command "{command}"! Did you forget the keyword "wiki"?',
+                            "content": f'Invalid command "{command}"! Did you forget the keyword "consult"?',
                         }
                     )
 

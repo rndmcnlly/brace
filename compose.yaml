@@ -20,6 +20,7 @@ services:
       - ./prompts.json:/app/backend/prompts.json:ro
       - ./models.json:/app/backend/models.json:ro
       - ./brace-logo-symbol.png:/app/backend/brace-logo-symbol.png:ro
+      - ./brace-system-prompt.md:/app/backend/brace-system-prompt.md:ro
       - ./functions:/functions:ro
       - ./functions.json:/app/backend/functions.json:ro
       - ./custom_start.sh:/app/backend/custom_start.sh:ro

@@ -50,6 +50,9 @@ with open("functions.json") as f:
 with open("models.json") as f:
     models_specifications = json.load(f)
     for spec in models_specifications:
+        if spec["info"]["params"]["system"].startswith("@"):
+            filename = spec["info"]["params"]["system"][1:]
+            spec["info"]["params"]["system"] = open(filename, "r").read()
         if spec["info"]["meta"]["profile_image_url"].startswith("@"):
             filename = spec["info"]["meta"]["profile_image_url"][1:]
             mimetype, _ = mimetypes.guess_type(filename)
