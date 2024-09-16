@@ -1,6 +1,7 @@
 import re
 import pathlib
 
+
 class Wiki:
     def __init__(self, base_path):
         self.path = base_path
@@ -73,17 +74,17 @@ class Filter:
                             "content": f'Invalid command "{command}"! Did you forget the keyword "wiki"?',
                         }
                     )
-        
+
         body["messages"] = expanded_messages
         return body
 
     async def outlet(self, body, user=None, __event_emitter__=None):
         last_message = body["messages"][-1]
-        if last_message["content"].endswith("⟩"):
+        if last_message["content"].rstrip("\n .").endswith("⟩"):
             await __event_emitter__(
                 {
                     "type": "message",
-                    "data": {"content": "\n...\n"},
+                    "data": {"content": "\n...\n\n"},
                 }
             )
             await __event_emitter__({"type": "action", "data": {"action": "continue"}})
