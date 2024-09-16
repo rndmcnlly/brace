@@ -23,7 +23,7 @@ with open("prompts.json") as f:
             Prompts.update_prompt_by_command(form_data.command, form_data)
         else:
             print(f"Inserting prompt: {form_data.command}")
-            Prompts.insert_new_prompt(form_data.user_id, form_data)
+            Prompts.insert_new_prompt(spec["user_id"], form_data)
         
 # Import functions
 

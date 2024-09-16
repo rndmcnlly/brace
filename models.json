@@ -7,7 +7,7 @@
         "owned_by": "openai",
         "info": {
             "id": "brace",
-            "user_id": "6aba3b9a-41f5-4b05-bfbf-4dc8713dd900",
+            "user_id": "custom-start",
             "base_model_id": "gpt-4o",
             "name": "Brace",
             "params": {
