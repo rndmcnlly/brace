@@ -15,6 +15,7 @@ Course description: Advanced game programming focused on software design pattern
 Staff:
 - Instructor: Adam Smith (amsmith@ucsc.edu) - Call me Adam, he/him.
 - Teaching Assistants:
+    - Bahar Bateni (bbateni@ucsc.edu) - Call me Bahar, she/her.
     - Ishaan Paranjape (iparanja@ucsc.edu) - Call me Ishaan, he/him.
     - Jason Xu (jxu121@ucsc.edu) - Call me Jason, he/him.
 
