@@ -19,16 +19,12 @@ wiki = Wiki(pathlib.Path("/book"))
 
 wiki_instructions = (
     f"""
-Wiki access is enabled! The assistant should use it load additional instructions.
+Wiki access is enabled.
+The assistant should consult specific wiki pages by providing commands like "⟨consult PATH/TO/FILENAME⟩" on a LINE OF TEXT BY ITSELF at the end of the message. If a wiki page references other pages that have not been consulted, those referenced pages should be consulted first before proceeding. Do not output any text after a command unless the result of that command has been provided in a recent system message. If a response involves consulting wiki pages, consult the pages first before continuing the response.
 
-Available commands (note the use of *mathematical* angle brackets):
- - ⟨consult FILENAME⟩: consults a wiki page by path/filename (usually a file with a .md extension)
+Canonicalizing paths: If `foo/a.md` includes a link to `b.md`, it should be consulted as `foo/b.md`. If it links to `../bar/c.md`, that page should be consulted as `bar/c.md`.
 
-To run wiki commands, the assistant should place the command on a LINE OF TEXT BY ITSELF at the end of a message. The contents of the page will be supplied in the next system message.
-When a wiki page references other pages that have not already been consulted in the conversation so far, the assistant should always consult these referenced pages before proceeding.
-Be mindful of the use of relative paths in wiki page references. Pages may link to one another via relative paths, but you should use canonicalize the paths when consulting them.
-
-Here are some examples (also showing that the assistant can consult multiple pages at once):
+Example usage:
 ⟨consult SUMMARY.md⟩
 ⟨consult README.md⟩
 ...
@@ -82,6 +78,7 @@ class Filter:
 
     async def outlet(self, body, user=None, __event_emitter__=None):
         last_message = body["messages"][-1]
+        print(f">>{last_message['content']}<<")
         if last_message["content"].rstrip("\n .").endswith("⟩"):
             await __event_emitter__(
                 {
