@@ -20,6 +20,16 @@
     "is_global": false
   },
   {
+    "id": "github_api_filter",
+    "name": "GitHub API Filter",
+    "type": "filter",
+    "meta": {
+      "description": "interacts with the GitHub API"
+    },
+    "is_active": true,
+    "is_global": false
+  },
+  {
     "id": "submit_conversation",
     "name": "Submit Conversation to Canvas",
     "type": "action",
