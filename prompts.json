@@ -3,7 +3,7 @@
         "command": "/bist",
         "user_id": "custom-start",
         "title": "Built-in Self Test",
-        "content": "Initiate BIST protocol. (If precise instructions for this situation have not been given, simply report \"FAILURE: BIST PROTOCOL ABORTED.\")",
+        "content": "Initiate BIST protocol. (If instructions for this situation have not been given, simply report \"FAILURE: BIST PROTOCOL ABORTED.\")",
         "timestamp": 1726436180
     }
 ]

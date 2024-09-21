@@ -24,7 +24,6 @@ Wiki access is enabled. The assistant should use it load additional instructions
 Available commands (note the use of *mathematical* angle brackets):
  - ⟨wiki FILENAME⟩: consults a wiki page by path/filename (usually a file with a .md extension)
 
-To run wiki commands, the assistant should place the command on a LINE OF TEXT BY ITSELF at the end of a message. The contents of the page will be supplied in the next system message.
 When a wiki page references other pages that have not already been consulted in the conversation so far, the assistant should always consult these referenced pages before proceeding.
 
 Canonicalizing paths: If `foo/a.md` includes a link to `b.md`, it should be consulted as `foo/b.md`. If it links to `../bar/c.md`, that page should be consulted as `bar/c.md`.
@@ -32,7 +31,6 @@ Canonicalizing paths: If `foo/a.md` includes a link to `b.md`, it should be cons
 Here are some examples (also showing that the assistant can consult multiple pages at once):
 ⟨wiki SUMMARY.md⟩
 ⟨wiki README.md⟩
-...
 """
     + wiki["SUMMARY.md"]
     + wiki["README.md"]
