@@ -1,5 +1,15 @@
 [
   {
+    "id": "auto_continue",
+    "name": "Auto-continue Filter",
+    "type": "filter",
+    "meta": {
+      "description": "Incrementally continues responses until all commands have been processed"
+    },
+    "is_active": true,
+    "is_global": false
+  },
+  {
     "id": "knowledge_wiki",
     "name": "Knowledge Wiki Filter",
     "type": "filter",
