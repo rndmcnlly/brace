@@ -59,7 +59,7 @@ def fetch_github_route(route, token):
         result = f"{response.status_code} - {response.text}"
     return dedent(
         f"""
-    <github-response route={route}>
+    <github-response route="{route}">
     {result}
     </github-response>
     """
