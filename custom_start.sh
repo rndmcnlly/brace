@@ -1,5 +1,5 @@
 #!/bin/sh
 set -e
-pip install canvasapi
+pip install dominate
 python custom_start.py
 ./start.sh

@@ -2,51 +2,94 @@ from pydantic import BaseModel, Field
 from typing import Optional
 
 import markdown
-import canvasapi
-
+import re
+import aiohttp
+import io
 import time
-from functools import wraps
+import json
 
 
-def cache_resource(ttl):
-    cache = {}
-
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            current_time = time.time()
-            key = (args, frozenset(kwargs.items()))
-
-            if key in cache:
-                value, timestamp = cache[key]
-                if current_time - timestamp < ttl:
-                    return value
-
-            # If not cached or expired, compute and cache the result
-            value = func(*args, **kwargs)
-            cache[key] = (value, current_time)
-            return value
-
-        return wrapper
-
-    return decorator
+async def lookup_student_by_email(api_url, api_key, course_id, email):
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+    }
+    enrollments = []
+    async with aiohttp.ClientSession(base_url=api_url, headers=headers) as session:
+        async with session.get(
+            f"/api/v1/courses/{course_id}/enrollments?per_page=1024"
+        ) as response:
+            response.raise_for_status()
+            enrollments = await response.json()
+    for enrollment in enrollments:
+        if enrollment["user"]["login_id"] == email:
+            return enrollment["user"]
+    return None
 
 
-@cache_resource(ttl=60)
-def get_enrollments(api_url, api_key, course_id):
-    course = canvasapi.Canvas(api_url, api_key).get_course(course_id)
-    return list(course.get_enrollments())
+async def lookup_assignment(api_url, api_key, course_id, assignment_id):
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+    }
+    async with aiohttp.ClientSession(base_url=api_url, headers=headers) as session:
+        async with session.get(
+            f"/api/v1/courses/{course_id}/assignments/{assignment_id}?per_page=1024"
+        ) as response:
+            response.raise_for_status()
+            return await response.json()
+
+
+async def submit_html_to_assignment(
+    api_url, api_key, course_id, assignment_id, student_id, html_filename, html_contents
+):
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+    }
+    async with aiohttp.ClientSession(base_url=api_url, headers=headers) as session:
+
+        file_params = {
+            "name": html_filename,
+            "content_type": "text/html",
+        }
+        async with session.post(
+            f"/api/v1/courses/{course_id}/assignments/{assignment_id}/submissions/{student_id}/files",
+            params=file_params,
+        ) as response:
+            response.raise_for_status()
+            upload_url = (await response.json())["upload_url"]
+
+        upload_data = {html_filename: io.StringIO(html_contents)}
+        async with aiohttp.request(
+            "POST", url=upload_url, data=upload_data, headers=headers
+        ) as response:
+            response.raise_for_status()
+            file_id = (await response.json())["id"]
+
+        submission_params = {
+            "submission[submission_type]": "online_upload",
+            "submission[file_ids][]": file_id,
+            "submission[user_id]": student_id,
+        }
+        async with session.post(
+            f"/api/v1/courses/{course_id}/assignments/{assignment_id}/submissions",
+            params=submission_params,
+        ) as response:
+            response.raise_for_status()
+            res = await response.json()
+
+        return res
 
 
 class Action:
     class Valves(BaseModel):
-        CANVAS_COURSE_ID: int = Field(default=None)
         CANVAS_ACCESS_TOKEN: str = Field(
-            default=None, description="instructor's credentials"
+            default=None, description="Instructor's Canvas access token"
         )
         CANVAS_API_URL: str = Field(
             default="https://canvas.ucsc.edu",
-            description="base url for institution's Canvas API",
+            description="Base URL for institution's Canvas API",
+        )
+        CANVAS_TEST_STUDENT_ID: int = Field(
+            default=None, description="Student id for Test Student"
         )
 
     def __init__(self):
@@ -61,50 +104,136 @@ class Action:
         __event_call__=None,
     ) -> Optional[dict]:
 
-        await __event_emitter__(
-            {
-                "type": "status",
-                "data": {
-                    "description": "Gathering information...",
-                    "done": False,
-                },
-            }
-        )
+        async def set_status(description, done=False):
+            await __event_emitter__(
+                {
+                    "type": "status",
+                    "data": {
+                        "description": description,
+                        "done": done,
+                    },
+                }
+            )
 
-        url = await __event_call__(
-            {
-                "type": "input",
-                "data": {
-                    "title": "Assignment URL",
-                    "message": "Provides the destination for the submission.",
-                    "placeholder": f"{self.valves.CANVAS_API_URL}/courses/{self.valves.CANVAS_COURSE_ID}/assignments/...",
-                },
-            }
-        )
+        async def prompt_user(title, message, placeholder):
+            return await __event_call__(
+                {
+                    "type": "input",
+                    "data": {
+                        "title": title,
+                        "message": message,
+                        "placeholder": placeholder,
+                    },
+                }
+            )
 
-        students = get_enrollments(
-            self.valves.CANVAS_API_URL,
-            self.valves.CANVAS_ACCESS_TOKEN,
-            self.valves.CANVAS_COURSE_ID,
-        )
-        students_by_email = {student["login_id"]: student for student in students}
-        for student in students:
+        async def confirm_user(title, message):
+            return await __event_call__(
+                {
+                    "type": "confirmation",
+                    "data": {
+                        "title": title,
+                        "message": message,
+                    },
+                }
+            )
+
+        async def append_message_content(content):
             await __event_emitter__(
                 {
                     "type": "message",
-                    "data": {"content": repr(students_by_email) + "\n\n"},
+                    "data": {"content": content},
                 }
             )
-        await __event_emitter__(
-            {"type": "message", "data": {"content": repr(__user__) + "\n\n"}}
-        )
 
-        await __event_emitter__(
-            {
-                "type": "status",
-                "data": {
-                    "description": "Submission succeeded. Check for details on Canvas.",
-                    "done": True,
-                },
-            }
-        )
+        try:
+
+            await set_status("Gathering information...")
+
+            url = await prompt_user(
+                "Assignment URL",
+                "Provides the destination for the submission.",
+                f"{self.valves.CANVAS_API_URL}/courses/COURSE_ID/assignments/ASSIGNMENT_ID",
+            )
+
+            match = re.match(
+                rf"{self.valves.CANVAS_API_URL}/courses/(\d+)/assignments/(\d+)", url
+            )
+
+            if not match:
+                await set_status("SUBMISSION FAILED: Invalid URL format.", done=False)
+                return
+
+            course_id, assignment_id = map(int, match.groups())
+
+            await set_status("Fetching student details...")
+
+            if __user__["role"] == "admin":
+                student_id = self.valves.CANVAS_TEST_STUDENT_ID
+                student_name = "Test Student"
+            else:
+
+                student = await lookup_student_by_email(
+                    self.valves.CANVAS_API_URL,
+                    self.valves.CANVAS_ACCESS_TOKEN,
+                    course_id,
+                    __user__["email"],
+                )
+
+                if not student:
+                    await set_status(
+                        "SUBMISSION FAILED: You do not seem to be an enrolled student in that course.",
+                        done=True,
+                    )
+                    return
+
+                student_id = student["id"]
+                student_name = student["name"]
+
+            await set_status("Fetching assignment details...")
+
+            assignment = await lookup_assignment(
+                self.valves.CANVAS_API_URL,
+                self.valves.CANVAS_ACCESS_TOKEN,
+                course_id,
+                assignment_id,
+            )
+
+            if not (
+                "online_upload" in assignment["submission_types"]
+                and "html" in assignment["allowed_extensions"]
+            ):
+                await set_status(
+                    "SUBMISSION FAILED: Assignment does not allow HTML submissions.",
+                    done=True,
+                )
+                return
+
+            await set_status("Confirming submission intent...")
+            confirmed = await confirm_user(
+                "Confirm submission",
+                f"You are about to submit to {assignment['name']} as {student_name}.",
+            )
+            if not confirmed:
+                await set_status("Submission abandoned at confirmation.", done=True)
+                return
+
+            await set_status("Submitting conversation to Canvas LMS...")
+
+            html_filename = "conversation.html"
+            html_contents = f"<pre>\n{json.dumps(body,indent=2)}\n</pre>"
+            await submit_html_to_assignment(
+                self.valves.CANVAS_API_URL,
+                self.valves.CANVAS_ACCESS_TOKEN,
+                course_id,
+                assignment_id,
+                student_id,
+                html_filename,
+                html_contents,
+            )
+
+            await set_status("Submission completed.", done=True)
+
+        except Exception as e:
+            await set_status(f"SUBMISSION FAILED: {e}", done=True)
+            raise e
