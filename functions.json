@@ -47,6 +47,6 @@
       "description": "Allows submitting formatted coversations to the Canvas LMS"
     },
     "is_active": true,
-    "is_global": false
+    "is_global": true
   }
 ]
