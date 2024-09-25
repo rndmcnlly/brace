@@ -27,7 +27,7 @@ services:
       - ./custom_start.py:/app/backend/custom_start.py:ro
     entrypoint: ["bash", "/app/backend/custom_start.sh"]
     restart: always
-    env_file: openai.env
+    env_file: keys.env
     environment:
       WEBUI_NAME: Brace
       ENABLE_SIGNUP: false
@@ -49,6 +49,7 @@ services:
       ENABLE_MODEL_FILTER: true
       MODEL_FILTER_LIST: brace
       DEFAULT_MODELS: brace
+      RESET_CONFIG_ON_START: true
 
 networks:
   web:
