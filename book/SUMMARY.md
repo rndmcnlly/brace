@@ -17,7 +17,3 @@
 ## Pedagogy
 
 * [Bloom Quiz Format](pedagogy/bloom.md)
-
-## Quizzes
-
-* [Q1](quizzes/q1.md)

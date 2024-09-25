@@ -1,4 +1,4 @@
-# Q1
+# Demo Quiz 1
 
 Run a Bloom quiz on Code Smells. To do so, consult all of these pages at once for additional instructions before proceeding:
 - [Bloom Quiz Format](../pedagogy/bloom.md)
