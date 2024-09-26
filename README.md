@@ -17,6 +17,7 @@ Brace is composed of three major components:
 - A **middle-end assistant character**, Brace, that applies a customized system prompt when chatting with users, consulting the knowledge wiki as needed.
     - Brace uses a **knowledge wiki** consisting of a collection of linked Markdown documents providing the assistant with specialized knowledge and behavioral instructions relevant to the current conversational context. Unlike mainstream retrieval-augmented generation (RAG) engines, accesses to this wiki are based on explicit and exact lookup of entire documents (rather than implicit lookup of document fragments).
     - Brace allows students to submit conversation transcripts directly to assigments on the **Canvas LMS** (assuming they accept submissions in the form of HTML file uploads).
+    - Brace can also fetch the text content of public web pages and query public projects on GitHub.
 - A **back-end chat-completion engine** based on the [OpenAI Chat Completions API](https://platform.openai.com/docs/guides/chat-completions) (which is implemented by may providers beyond OpenAI).
 
 
@@ -64,7 +65,7 @@ Generate deployment keys (these allow your Docker host to pull from this reposit
 
 Clone this repository. If you followed the provisioning steps above, you will end up with a folder `/root/brace` containing all of the files in this repository.
 
-Collect your OpenAI credentials (e.g. `OPENAI_AI_KEY`) into `openai.env`. This file is read when stack starts up.
+Collect your OpenAI credentials (e.g. `OPENAI_AI_KEY`) into `keys.env`. This file is read when stack starts up.
 
 For test deployments:
 - Run `docker network create web` (This creates dummy network. In deployment, you'd provide a real network.)
@@ -78,30 +79,46 @@ For production deployments:
 Once running, you can access that chat interface at [http://localhost:3000](http://localhost:3000).
 
 Unfortunately, there are some remaining manual setup steps:
-- In OWUI, find Workspace > Models, hide all of the OpenAI models. (Shift-click to hide multiple models at once.)
-- Maybe edit the value of `ENABLE_SIGNUP` in `docker-compose.yml` to `true` (temporarily) to allow yourself to create an admin account.
+- In OWUI, find Workspace > Models, hide all of the extra models you don't want to see. (Shift-click to hide multiple models at once.)
+- Use the `/bist` prompt to check *most* of the expected functionality (e.g. auto-continue, wiki access, fetch access, etc.)
+- In the *Valves* for the `Submit Conversation to Canvas` action, be sure that you have your Canvas Access Token and Test Student Id configured properly. Watch out that the test student id is specific to a course, and the id number changes each time ou used the `Reset student view` button in Canvas.
 
 The OAuth stuff is setup to allow authentication with `@ucsc.edu` accounts when the server is running on `localhost:3000`. Contact `amsmith@ucsc.edu` if this needs to change.
 
-# TODO (to get ready for course start)
-- figure out how to make filters active/enabled by default 
-- implement a rate limiting filter, but leave it disabled
-- implement a langfuse monitoring filter, but leave it disabled
-- nginx + cerbot as front end proxy (don't forget to disable buffering for websockets)
-- populate Brace's dry (no wiki) system prompt
-- populate Brace's wet (wiki) system prompt
-- populate the wiki with some useful content
+## Monitoring
+
+We decided not to integrate [Langfuse](https://langfuse.com/) for continuous monitoring because it involved sharing student conversations with a third party. Instead, here's what we recommend for monitoring:
+- In the OWUI Admin Panel, Databases page, use `Export All Chats (All Users)` to get a dump of all activity. The exported chat view gives you anonymous user ids, so you can see how many conversations each user has had, how long they are, what languages they involve, etc.
+- Also on the Databases page, you can use `Download Database` to get a copy of the entire databas (in SQLite format). This is useful for debugging and for auditing the system's behavior, but it is definitely not anonymized.
 
 # TODO (to generalize for new courses)
-- document expected usage patterns (e.g. typical number of conversation, turn depth, and token balance)
-- implement enrollment filter?
-    - at the start of every conversation, a filter uses a cached view of enrollment to decide if the current user is allowed to proceed with conversation, throw exception to kill convo otherwise
-    - does this violate our principle of not proving enrollment in the transcripts?
-- move course-specific data out of repo
-    - think about how to have the dry system propmt also be configurable via file system
+
+- Document expected usage patterns (e.g. typical number of conversation, turn depth, and token balance)
+- Implement enrollment filter?
+    - At the start of every conversation, a filter uses a cached view of enrollment to decide if the current user is allowed to proceed with conversation, throw exception to kill convo otherwise.
+    - Does this violate our design principle of not proving enrollment in the transcripts? We should check if a conversation that hits an exception on the very first reply even counts as a logged conversation.
+- Move course-specific data out of repo
     - `/book` should just be example content under the assumption that future deployments will volume-mount another directory on top of this
+    - `brace-system-propmt.md` can already be clobbered externally by filename.
     - think about whether the wiki pages can be pulled from Canvas pages on the fly (e.g. from an unpublished folder so that they aren't visible to students but are visible to )
-- onboarding instuctions for both instructors and students!
+- Write onboarding instuctions for both instructors and students:
+    - Instructors
+        - How do I log in? (Basically: press the "Continue with SSO" button. The first user for a deployment becomes the admin user.)
+        - How do I alter the system prompt?
+            - Temporary: Find `Brace` in the Models page of the OWUI Workspace page. You can edit the system prompt here. This will have an immediate effect, but the changes will be overwritten the next time the system restarts for whatever reason.
+            - Permanent: Edit the `brace-system-prompt.md` file in the root directory of this repository. This file is read at startup, so changes will persist across restarts.
+        - How do I add new knowledge to the system?
+            - Create a new Markdown file in the `book/` directory. The file should be named in a way that makes sense for the content it contains. The file should be linked from the `SUMMARY.md` file in the same directory.
+            - The system will automatically load the contents of the `book/` directory at startup, so changes will persist across restarts.
+
+    - Students
+        - How do I log in? (Basically: press the "Continue with SSO" button)
+        - How do I submit a conversation to Canvas?
+            - Press the magic sparkle
+            - Provide the URL of the Canvas assignment you are trying to complete
+            - Confirm that the system has the right assignment and student
+            - Submit!
+            - Go back to Canvas to confirm that your submission worked.
 
 # Diagrams
 
