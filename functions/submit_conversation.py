@@ -9,6 +9,52 @@ import time
 import json
 
 
+def format_conversat_as_html(conversation):
+    from pygments.formatters import HtmlFormatter
+
+    formatter = HtmlFormatter(style="xcode")
+    pygments_css = formatter.get_style_defs(".codehilite")
+
+    import dominate.tags as dt
+    from dominate.util import text, raw
+    from markdown import markdown
+    from pprint import pformat
+
+    with dt.html() as html:
+        with dt.head():
+            raw('<meta charset="UTF-8">')
+        with dt.main():
+            with dt.style():
+                raw("article { font-family: sans-serif; } ")
+                raw("section { padding: 1em; border-radius: 1em; max-width: 120ex; } ")
+                raw(".user { color: white; background-color: black; } ")
+                raw(".assistant { color: black: background-color: white; } ")
+                raw(
+                    ".action { small-caps; font-weight: bolder; font-size: xx-small; opacity: 50%; } "
+                )
+                raw(pygments_css)
+
+            with dt.article(id=conversation["id"]):
+                with dt.header():
+                    with dt.h1():
+                        text(conversation["chat_id"])
+                    with dt.pre():
+                        text(json.dumps(conversation["user"], indent=2))
+
+                for message in conversation["messages"]:
+                    with dt.section(cls=message["role"]):
+                        with dt.div(cls="action"):
+                            with dt.span(cls="role"):
+                                text(message["role"])
+                        raw(
+                            markdown(
+                                message["content"],
+                                extensions=["codehilite", "fenced_code"],
+                            )
+                        )
+    return html.render()
+
+
 async def lookup_student_by_email(api_url, api_key, course_id, email):
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -148,6 +194,9 @@ class Action:
 
         try:
 
+            html_filename = "conversation.html"
+            html_contents = format_conversat_as_html(body | {"user": __user__})
+
             await set_status("Gathering information...")
 
             url = await prompt_user(
@@ -220,8 +269,6 @@ class Action:
 
             await set_status("Submitting conversation to Canvas LMS...")
 
-            html_filename = "conversation.html"
-            html_contents = f"<pre>\n{json.dumps(body,indent=2)}\n</pre>"
             await submit_html_to_assignment(
                 self.valves.CANVAS_API_URL,
                 self.valves.CANVAS_ACCESS_TOKEN,
