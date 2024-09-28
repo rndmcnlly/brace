@@ -16,7 +16,6 @@ def format_conversat_as_html(conversation):
     import dominate.tags as dt
     from dominate.util import text, raw
     from markdown import markdown
-    from pprint import pformat
 
     with dt.html() as html:
         with dt.head():
@@ -62,7 +61,6 @@ async def lookup_student_by_email(api_url, api_key, course_id, email):
         while url:
             async with session.get(url) as response:
                 response.raise_for_status()
-                print(response.headers.get("Link", "MISSING"))
                 enrollments = await response.json()
                 for enrollment in enrollments:
                     if enrollment["user"]["login_id"] == email:
