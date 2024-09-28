@@ -1,11 +1,9 @@
 from pydantic import BaseModel, Field
 from typing import Optional
 
-import markdown
 import re
 import aiohttp
 import io
-import time
 import json
 
 
@@ -59,16 +57,23 @@ async def lookup_student_by_email(api_url, api_key, course_id, email):
     headers = {
         "Authorization": f"Bearer {api_key}",
     }
-    enrollments = []
+    url = f"/api/v1/courses/{course_id}/enrollments?per_page=100"
     async with aiohttp.ClientSession(base_url=api_url, headers=headers) as session:
-        async with session.get(
-            f"/api/v1/courses/{course_id}/enrollments?per_page=1024"
-        ) as response:
-            response.raise_for_status()
-            enrollments = await response.json()
-    for enrollment in enrollments:
-        if enrollment["user"]["login_id"] == email:
-            return enrollment["user"]
+        while url:
+            async with session.get(url) as response:
+                response.raise_for_status()
+                print(response.headers.get("Link", "MISSING"))
+                enrollments = await response.json()
+                for enrollment in enrollments:
+                    if enrollment["user"]["login_id"] == email:
+                        return enrollment["user"]
+
+                if match := re.search(
+                    r'<([^>]+?)>; rel="next"', response.headers.get("Link", "")
+                ):
+                    url = match.group(1).replace(api_url, "")
+                else:
+                    url = None
     return None
 
 
