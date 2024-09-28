@@ -28,6 +28,7 @@ When a wiki page references other pages that have not already been consulted in 
 
 Canonicalizing paths: If `foo/a.md` includes a link to `b.md`, it should be consulted as `foo/b.md`. If it links to `../bar/c.md`, that page should be consulted as `bar/c.md`.
 
+Each wiki command should be placed on a separate line.
 Here are some examples (also showing that the assistant can consult multiple pages at once):
 ⟨wiki SUMMARY.md⟩
 ⟨wiki README.md⟩
