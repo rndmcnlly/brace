@@ -89,14 +89,15 @@ class Filter:
         )
         for message in body["messages"]:
             expanded_messages.append(message)
-            for route in re.findall(github_command_pattern, message["content"]):
-                expanded_messages.append(
-                    {
-                        "role": "system",
-                        "content": fetch_github_route(
-                            route, self.valves.GITHUB_API_TOKEN
-                        ),
-                    }
-                )
+            if message["role"] == "assistant":
+                for route in re.findall(github_command_pattern, message["content"]):
+                    expanded_messages.append(
+                        {
+                            "role": "system",
+                            "content": fetch_github_route(
+                                route, self.valves.GITHUB_API_TOKEN
+                            ),
+                        }
+                    )
         body["messages"] = expanded_messages
         return body

@@ -50,21 +50,22 @@ class Filter:
         )
         for message in body["messages"]:
             expanded_messages.append(message)
-            for page in re.findall(consult_wiki_pattern, message["content"]):
-                if page in wiki:
-                    expanded_messages.append(
-                        {
-                            "role": "system",
-                            "content": wiki[page],
-                        }
-                    )
-                else:
-                    expanded_messages.append(
-                        {
-                            "role": "system",
-                            "content": f'No wiki page for "{page}" exists! Tell the user that lookup has failed before proceeding.',
-                        }
-                    )
+            if message["role"] == "assistant":
+                for page in re.findall(consult_wiki_pattern, message["content"]):
+                    if page in wiki:
+                        expanded_messages.append(
+                            {
+                                "role": "system",
+                                "content": wiki[page],
+                            }
+                        )
+                    else:
+                        expanded_messages.append(
+                            {
+                                "role": "system",
+                                "content": f'No wiki page for "{page}" exists! Tell the user that lookup has failed before proceeding.',
+                            }
+                        )
 
         body["messages"] = expanded_messages
         return body

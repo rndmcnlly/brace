@@ -83,12 +83,13 @@ class Filter:
         )
         for message in body["messages"]:
             expanded_messages.append(message)
-            for url in re.findall(fetch_command_pattern, message["content"]):
-                expanded_messages.append(
-                    {
-                        "role": "system",
-                        "content": fetch_url(url, self.valves.JINA_API_TOKEN),
-                    }
-                )
+            if message["role"] == "assistant":
+                for url in re.findall(fetch_command_pattern, message["content"]):
+                    expanded_messages.append(
+                        {
+                            "role": "system",
+                            "content": fetch_url(url, self.valves.JINA_API_TOKEN),
+                        }
+                    )
         body["messages"] = expanded_messages
         return body
