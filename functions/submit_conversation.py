@@ -208,6 +208,12 @@ class Action:
                 f"{self.valves.CANVAS_API_URL}/courses/COURSE_ID/assignments/ASSIGNMENT_ID",
             )
 
+            if not url:
+                await set_status(
+                    "Submission abandoned before providing destination URL.", done=True
+                )
+                return
+
             match = re.match(
                 rf"{self.valves.CANVAS_API_URL}/courses/(\d+)/assignments/(\d+)", url
             )
