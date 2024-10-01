@@ -74,15 +74,13 @@ class Filter:
         self.valves = self.Valves()
 
     def inlet(self, body, user=None, __event_emitter__=None):
-        expanded_messages = []
-        expanded_messages.append(
+        expanded_messages = [
             {
                 "role": "system",
                 "content": fetch_instructions,
             }
-        )
+        ]
         for message in body["messages"]:
-            expanded_messages.append(message)
             if message["role"] == "assistant":
                 for url in re.findall(fetch_command_pattern, message["content"]):
                     expanded_messages.append(
@@ -91,5 +89,5 @@ class Filter:
                             "content": fetch_url(url, self.valves.JINA_API_TOKEN),
                         }
                     )
-        body["messages"] = expanded_messages
+        body["messages"] = expanded_messages + body["messages"]
         return body

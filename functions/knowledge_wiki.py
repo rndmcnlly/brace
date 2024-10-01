@@ -42,15 +42,13 @@ consult_wiki_pattern = r"⟨wiki ([^⟩]+)⟩"
 
 class Filter:
     def inlet(self, body, user=None, __event_emitter__=None):
-        expanded_messages = []
-        expanded_messages.append(
+        expanded_messages = [
             {
                 "role": "system",
                 "content": wiki_instructions,
             }
-        )
+        ]
         for message in body["messages"]:
-            expanded_messages.append(message)
             if message["role"] == "assistant":
                 for page in re.findall(consult_wiki_pattern, message["content"]):
                     if page in wiki:
@@ -68,5 +66,5 @@ class Filter:
                             }
                         )
 
-        body["messages"] = expanded_messages
+        body["messages"] = expanded_messages + body["messages"]
         return body
