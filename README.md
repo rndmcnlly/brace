@@ -67,6 +67,8 @@ Clone this repository. If you followed the provisioning steps above, you will en
 
 Collect your OpenAI credentials (e.g. `OPENAI_AI_KEY`) into `keys.env`. This file is read when stack starts up.
 
+And, while you are in there, make use to populate `oauth.env` with your `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` from Google. (If you need to switch away from Google for authentication, look to update `OPENID_PROVIDER_URL` in `compose.yaml`.)
+
 For test deployments:
 - Run `docker network create web` (This creates dummy network. In deployment, you'd provide a real network.)
 - Run `docker compose up`
