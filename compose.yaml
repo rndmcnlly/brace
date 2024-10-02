@@ -36,6 +36,7 @@ services:
       ENABLE_OAUTH_SIGNUP: true
       ENABLE_LOGIN_FORM: false
       OAUTH_MERGE_ACCOUNTS_BY_EMAIL: true
+      DEFAULT_USER_ROLE: user
       OPENID_PROVIDER_URL: https://accounts.google.com/.well-known/openid-configuration
       USER_PERMISSIONS_CHAT_DELETION: false
       USER_PERMISSIONS_CHAT_EDITING: false
