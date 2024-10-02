@@ -26,7 +26,7 @@
                     {"content": "I have a question about the course."},
                     {"content": "I've got feelings. 😬"}
                 ],
-                "filterIds": ["auto_continue", "knowledge_wiki", "github_api_filter", "fetch"],
+                "filterIds": ["auto_continue", "knowledge_wiki", "github_api_filter", "fetch", "canvas_reader"],
                 "actionIds": ["submit_conversation"]
             },
             "updated_at": 1724365534,
