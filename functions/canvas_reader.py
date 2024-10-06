@@ -14,6 +14,8 @@ Available commands (note the use of *mathematical* angle brackets):
  - ⟨canvas courses/C/assignments⟩: Fetch assignment summaries for a course.
  - ⟨canvas courses/C/assignments/A⟩: Fetch assignment details for assignment with id A.
  - ⟨canvas courses/C/assignment_groups⟩: Fetch assigment group descriptions.
+
+Results are cached for one hour to avoid overloading the Canvas API.
 """
 
 

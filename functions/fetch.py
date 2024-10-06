@@ -14,6 +14,8 @@ Available commands (note the use of *mathematical* angle brackets):
 
 For example, to get the gist of "https://suno.com/playlist/17839278-c248-4967-90be-796970592520", use this command:
 ⟨fetch https://suno.com/playlist/17839278-c248-4967-90be-796970592520⟩
+
+Results are cached for one hour to avoid overloading the Reader API.
 """
 
 

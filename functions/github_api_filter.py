@@ -22,6 +22,8 @@ GitHub API endpoints that may be relevant:
 
 For example, if you wanted to get find and access the README-like file for https://github.com/open-webui/pipelines (which as OWNER "open-webui" and REPO "pipelines"), you would use the command the following command:
 ⟨github repos/open-webui/pipelines/readme⟩
+
+Results are cached for one hour to avoid overloading the GitHub API.
 """
 
 
