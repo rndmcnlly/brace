@@ -17,7 +17,7 @@
                 "profile_image_url": "@brace-logo-symbol.png",
                 "description": "I can help you with the course.",
                 "capabilities": {
-                    "vision": false,
+                    "vision": true,
                     "usage": false
                 },
                 "suggestion_prompts": [
