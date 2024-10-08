@@ -48,7 +48,7 @@ def fetch_resource(resource, token, base_url):
 
     handlers = {
         r"^courses/(\d+)/syllabus$": lambda res: {
-            k: v for k, v in res.items() if k in ["id", "name", "syllabus_body"]
+            k: v for k, v in res[0].items() if k in ["id", "name", "syllabus_body"]
         },
         r"^courses/(\d+)/assignments$": lambda res: [
             {
@@ -70,7 +70,7 @@ def fetch_resource(resource, token, base_url):
         ],
         r"^courses/(\d+)/assignments/(\d+)$": lambda res: {
             k: v
-            for k, v in res.items()
+            for k, v in res[0].items()
             if k
             in [
                 "id",
@@ -92,19 +92,29 @@ def fetch_resource(resource, token, base_url):
         + "/api/v1/"
         + resource.replace("/syllabus", "?include[]=syllabus_body")
     )
-    print("CANVAS", resource, url)
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
+
+    all_results = []
+
+    while url:
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            return f"{response.status_code} - {response.text}"
+
         raw_result = response.json()
-        for pattern, handler in handlers.items():
-            if re.match(pattern, resource):
-                result = handler(raw_result)
-                break
-        else:
-            result = f"Unknown Canvas resource: {resource}"
+        all_results.extend(raw_result if isinstance(raw_result, list) else [raw_result])
+
+        # Pagination: Fetch the 'next' page URL if present
+        link_header = response.headers.get("Link", "")
+        match = re.search(r'<([^>]+)>;\s*rel="next"', link_header)
+        url = match.group(1) if match else None
+
+    for pattern, handler in handlers.items():
+        if re.match(pattern, resource):
+            result = handler(all_results)
+            break
     else:
-        result = f"{response.status_code} - {response.text}"
-    print(dict(url=result))
+        result = "Unknown Canvas resource: " + resource
+
     return dedent(
         f"""
     <canvas-response resource="{resource}">
