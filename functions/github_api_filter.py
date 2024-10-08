@@ -1,6 +1,8 @@
 import re
 import time
 import requests
+import mimetypes
+import base64
 from textwrap import dedent
 from functools import wraps
 from pydantic import BaseModel, Field
@@ -22,9 +24,13 @@ GitHub API endpoints that may be relevant:
 
 For example, if you wanted to get find and access the README-like file for https://github.com/open-webui/pipelines (which as OWNER "open-webui" and REPO "pipelines"), you would use the command the following command:
 ⟨github repos/open-webui/pipelines/readme⟩
-
-Results are cached for one hour to avoid overloading the GitHub API.
 """
+
+MAX_RESULT_LENGTH = 100_000
+TRUNCATED_RESULT_LENGTH = (
+    10_000  # super long files are likely irrelevant, so we'll squeeze them smaller
+)
+CACHE_TTL = 5 * 60
 
 
 def cache_resource(ttl_seconds):
@@ -48,7 +54,7 @@ def cache_resource(ttl_seconds):
     return decorator
 
 
-@cache_resource(ttl_seconds=3600)
+@cache_resource(ttl_seconds=CACHE_TTL)
 def fetch_github_route(route, token):
     url = f"https://api.github.com/{route}"
     headers = {"Accept": "application/vnd.github.v3+json"}
@@ -57,6 +63,23 @@ def fetch_github_route(route, token):
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         result = response.json()
+        if "content" in result:
+            if "path" in result:
+                mimetype, _ = mimetypes.guess_type(result["path"])
+                if mimetype.startswith("text/") or mimetype in [
+                    "application/xml",
+                    "application/json",
+                ]:
+                    if result.get("encoding") == "base64":
+                        result["content"] = base64.b64decode(result["content"]).decode(
+                            "utf8"
+                        )
+                        result["encoding"] = "text"
+            if len(result["content"]) > MAX_RESULT_LENGTH:
+                result["content"] = (
+                    result["content"][:TRUNCATED_RESULT_LENGTH] + "...(truncated)"
+                )
+
     else:
         result = f"{response.status_code} - {response.text}"
     return dedent(
@@ -88,16 +111,26 @@ class Filter:
                 "content": github_instructions,
             }
         ]
+        already_fetched = set()
         for message in body["messages"]:
             if message["role"] == "assistant":
                 for route in re.findall(github_command_pattern, message["content"]):
-                    expanded_messages.append(
-                        {
-                            "role": "system",
-                            "content": fetch_github_route(
-                                route, self.valves.GITHUB_API_TOKEN
-                            ),
-                        }
-                    )
+                    if already_fetched:
+                        expanded_messages.append(
+                            {
+                                "role": "system",
+                                "content": f"Duplicate fetch for {route} ignored in this session, proceeding with previously cached result. Warn the user that these results may be stale by up to {CACHE_TTL} seconds.",
+                            }
+                        )
+                    else:
+                        expanded_messages.append(
+                            {
+                                "role": "system",
+                                "content": fetch_github_route(
+                                    route, self.valves.GITHUB_API_TOKEN
+                                ),
+                            }
+                        )
+                        already_fetched.add(route)
         body["messages"] = expanded_messages + body["messages"]
         return body
