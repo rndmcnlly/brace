@@ -11,9 +11,6 @@ from open_webui.apps.webui.models.models import Models, ModelForm
 from open_webui.apps.webui.models.functions import Functions, FunctionForm
 from open_webui.apps.webui.models.prompts import Prompts, PromptForm
 
-from open_webui.config import FUNCTIONS_DIR
-from open_webui.apps.webui.utils import load_function_module_by_id
-
 # Import prompts
 
 with open("prompts.json") as f:
