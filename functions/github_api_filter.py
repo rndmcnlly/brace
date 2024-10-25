@@ -113,6 +113,7 @@ class Filter:
         ]
         already_fetched = set()
         for message in body["messages"]:
+            expanded_messages.append(message)
             if message["role"] == "assistant":
                 for route in re.findall(github_command_pattern, message["content"]):
                     if already_fetched:
@@ -132,5 +133,5 @@ class Filter:
                             }
                         )
                         already_fetched.add(route)
-        body["messages"] = expanded_messages + body["messages"]
+        body["messages"] = expanded_messages
         return body

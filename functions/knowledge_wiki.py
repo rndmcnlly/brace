@@ -49,6 +49,7 @@ class Filter:
             }
         ]
         for message in body["messages"]:
+            expanded_messages.append(message)
             if message["role"] == "assistant":
                 for page in re.findall(consult_wiki_pattern, message["content"]):
                     if page in wiki:
@@ -66,5 +67,5 @@ class Filter:
                             }
                         )
 
-        body["messages"] = expanded_messages + body["messages"]
+        body["messages"] = expanded_messages
         return body
