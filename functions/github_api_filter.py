@@ -19,6 +19,7 @@ GitHub API endpoints that may be relevant:
 - Get a commit (incluing the patch): https://api.github.com/repos/OWNER/REPO/commits/REF
 - Get the repo readme: https://api.github.com/repos/OWNER/REPO/readme
 - Get a specific file: https://api.github.com/repos/OWNER/REPO/contents/PATH/TO/FILE
+- Get recent workflow runs: https://api.github.com/repos/OWNER/REPO/actions/runs
 - Get a gist: https://api.github.com/gists/GIST_ID
 - (Many other read-only GitHub API routes are also available. Query parameters may be included in the ROUTE text.)
 
