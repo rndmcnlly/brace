@@ -116,7 +116,7 @@ class Filter:
             expanded_messages.append(message)
             if message["role"] == "assistant":
                 for route in re.findall(github_command_pattern, message["content"]):
-                    if already_fetched:
+                    if route in already_fetched:
                         expanded_messages.append(
                             {
                                 "role": "system",
