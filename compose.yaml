@@ -1,7 +1,7 @@
 services:
 
   owui:
-    image: ghcr.io/open-webui/open-webui:v0.3.34
+    image: ghcr.io/open-webui/open-webui:v0.3.35
     expose:
       - 8080
     ports:
