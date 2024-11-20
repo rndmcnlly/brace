@@ -8,7 +8,7 @@
         "info": {
             "id": "brace",
             "user_id": "custom-start",
-            "base_model_id": "gpt-4o-2024-08-06",
+            "base_model_id": "gpt-4o-2024-11-20",
             "name": "Brace",
             "params": {
                 "system": "@brace-system-prompt.md"
