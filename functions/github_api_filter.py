@@ -31,7 +31,7 @@ MAX_RESULT_LENGTH = 100_000
 TRUNCATED_RESULT_LENGTH = (
     10_000  # super long files are likely irrelevant, so we'll squeeze them smaller
 )
-CACHE_TTL = 5 * 60
+CACHE_TTL = 24 * 60 * 60
 
 
 def cache_resource(ttl_seconds):
@@ -56,7 +56,7 @@ def cache_resource(ttl_seconds):
 
 
 @cache_resource(ttl_seconds=CACHE_TTL)
-def fetch_github_route(route, token):
+def fetch_github_route(route, token, nonce=None):
     url = f"https://api.github.com/{route}"
     headers = {"Accept": "application/vnd.github.v3+json"}
     if token:
@@ -67,10 +67,15 @@ def fetch_github_route(route, token):
         if "content" in result:
             if "path" in result:
                 mimetype, _ = mimetypes.guess_type(result["path"])
-                if mimetype.startswith("text/") or mimetype in [
-                    "application/xml",
-                    "application/json",
-                ]:
+                if (
+                    (mimetype and mimetype.startswith("text/"))
+                    or mimetype
+                    in [
+                        "application/xml",
+                        "application/json",
+                    ]
+                    or (mimetype is None and result["path"].endswith(".yaml"))
+                ):
                     if result.get("encoding") == "base64":
                         result["content"] = base64.b64decode(result["content"]).decode(
                             "utf8"
@@ -112,27 +117,19 @@ class Filter:
                 "content": github_instructions,
             }
         ]
-        already_fetched = set()
+        nonce = hash(body["metadata"]["chat_id"])
         for message in body["messages"]:
             expanded_messages.append(message)
             if message["role"] == "assistant":
                 for route in re.findall(github_command_pattern, message["content"]):
-                    if route in already_fetched:
-                        expanded_messages.append(
-                            {
-                                "role": "system",
-                                "content": f"Duplicate fetch for {route} ignored in this session, proceeding with previously cached result. Warn the user that these results may be stale by up to {CACHE_TTL} seconds.",
-                            }
-                        )
-                    else:
-                        expanded_messages.append(
-                            {
-                                "role": "system",
-                                "content": fetch_github_route(
-                                    route, self.valves.GITHUB_API_TOKEN
-                                ),
-                            }
-                        )
-                        already_fetched.add(route)
+                    expanded_messages.append(
+                        {
+                            "role": "system",
+                            "content": fetch_github_route(
+                                route, self.valves.GITHUB_API_TOKEN, nonce
+                            ),
+                        }
+                    )
+                    nonce += 1
         body["messages"] = expanded_messages
         return body
