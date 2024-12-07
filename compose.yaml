@@ -1,7 +1,7 @@
 services:
 
   owui:
-    image: ghcr.io/open-webui/open-webui:v0.4.2
+    image: ghcr.io/open-webui/open-webui:v0.4.8
     expose:
       - 8080
     ports:
@@ -52,6 +52,7 @@ services:
       MODEL_FILTER_LIST: brace
       DEFAULT_MODELS: brace
       RESET_CONFIG_ON_START: true
+      ENABLE_AUTOCOMPLETE_GENERATION: false
 
 networks:
   web:
