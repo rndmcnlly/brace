@@ -44,7 +44,7 @@ class Filter:
     def inlet(self, body, user=None, __event_emitter__=None):
         expanded_messages = [
             {
-                "role": "system",
+                "role": "assistant",
                 "content": wiki_instructions,
             }
         ]
@@ -55,14 +55,14 @@ class Filter:
                     if page in wiki:
                         expanded_messages.append(
                             {
-                                "role": "system",
+                                "role": "assistant",
                                 "content": wiki[page],
                             }
                         )
                     else:
                         expanded_messages.append(
                             {
-                                "role": "system",
+                                "role": "assistant",
                                 "content": f'No wiki page for "{page}" exists! Tell the user that lookup has failed before proceeding.',
                             }
                         )

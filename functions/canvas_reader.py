@@ -143,7 +143,7 @@ class Filter:
     def inlet(self, body, user=None, __event_emitter__=None):
         expanded_messages = [
             {
-                "role": "system",
+                "role": "assistant",
                 "content": canvas_instructions,
             }
         ]
@@ -153,7 +153,7 @@ class Filter:
                 for resource in re.findall(canvas_command_pattern, message["content"]):
                     expanded_messages.append(
                         {
-                            "role": "system",
+                            "role": "assistant",
                             "content": fetch_resource(
                                 resource,
                                 self.valves.CANVAS_ACCESS_TOKEN,

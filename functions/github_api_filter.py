@@ -111,9 +111,10 @@ class Filter:
         self.valves = self.Valves()
 
     def inlet(self, body, user=None, __event_emitter__=None):
+        print("BODY", body)
         expanded_messages = [
             {
-                "role": "system",
+                "role": "assistant",
                 "content": github_instructions,
             }
         ]
@@ -124,7 +125,7 @@ class Filter:
                 for route in re.findall(github_command_pattern, message["content"]):
                     expanded_messages.append(
                         {
-                            "role": "system",
+                            "role": "assistant",
                             "content": fetch_github_route(
                                 route, self.valves.GITHUB_API_TOKEN, nonce
                             ),
