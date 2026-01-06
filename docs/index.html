@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css"
+		integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+		integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"
+		integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<title>Brace Tools</title>
+</head>
+
+<body>
+	<main class="ui container">
+		<h1>Brace Tools</h1>
+		<div class="ui two column very relaxed grid">
+			<div class="column">
+				<p><strong>Brace</strong> is an <abbr title="Large Language Model">LLM</abbr>-powered course assistant
+					created by Professor <a href="https://adamsmith.as">Adam Smith</a> to help with teaching
+					feedback-intensive
+					courses with large student populations. Unlike other LLM-based assistants, chats with Brace pull in
+					instructor-authored content as needed in order to carry out activities and behaviors specific the
+					the course. Brace integrates with the Canvas LMS in order to allow students to directly submit
+					conversation transcripts.</p>
+					<iframe width="540" height="300" src="https://www.youtube.com/embed/TTF_1ENAwVs?start=3520&end=5014" title="Experiments with AI in Teaching and Learning — Teaching Week 2025" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+				<p><strong>What?</strong> It lets you have conversations like the one in <a
+						href="https://gist.github.com/rndmcnlly/1aae659939e90eb798179aed2188b2b6">this transcript</a>
+					from an early prototype of the system. It's <em>✨agentic✨</em>.</p>
+				<p><strong>How are students reacting?</strong> Here's <a
+						href="https://gist.github.com/rndmcnlly/537d82bffa62d2b7ae0767f896d4b6fb">a summary of student
+						reactions</a> to a first assignment that <emph>required</emph> using Brace
+					(for a structured interview that leads up to them configuring a personal system prompt for use in
+					future chats).</p>
+				<p><strong>Where can I audit the source code for Brace?</strong> The source code for this system
+					can be found at <a href="https://github.com/rndmcnlly/brace">https://github.com/rndmcnlly/brace</a>.
+					Because Brace can pull assignment descriptions and other text from Canvas, more and more of Brace's
+					behavior is controlled by natural language instructions that are private to the community of the
+					course and not visible on GitHub.
+				</p>
+			</div>
+			<div class="column">
+				<div class="ui card">
+					<a class="image" href="https://chat.brace.tools/auth">
+						<img src="brace-logo-symbol.png" alt="Brace Logo">
+					</a>
+					<div class="content">
+						<a class="header" href="https://chat.brace.tools/auth">Chat with Brace</a>
+						<p>A UCSC Google Account is required to access this tool.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="ui one column">
+			<h2>Design Notes</h2>
+			<h3>FAQ</h3>
+			<ul>
+				<li><strong>Who pays for all this?</strong> It's just Adam Smith building and operating this thing. We
+					spend about $12/month for the front-end server and $1.50/student/month for the back-end LLM service.
+					Roughly, thats 20k input tokens (mostly cached) and 1k output tokens per student per day. We expect costs to drop to $0.25/student/month very soon.
+				</li>
+				<li><strong>Why is this on the <code>brace.tools</code> domain and not something more official like
+						<code>brace.ucsc.edu</code>?</strong> It takes many meetings and approvals to set that up. I'm
+					working through it.</li>
+				<li><strong>Where is the data stored?</strong> Conversations are stored on Adam's server, and copies
+					of some of them are submitted to the Canvas LMS via explicit student actions. Conversations may be
+					temporarily stored by back-end LLM providers to speed up future text completion calls.</li>
+				<li><strong>Who can access student conversations?</strong> The instructor is the only one
+					who can access student chats on the server (and students cannot look at peer work, and TAs can only
+					see chats submitted to Canvas).</li>
+				<li><strong>How is this different from ChatGPT?</strong> A few important ways:
+					<ol>
+						<li>The system disguishes the roles of <em>students</em> and <em>teachers</em> and their
+							relation to a specific <em>course</em> that organizes <em>assignments</em>.</li>
+						<li>In a typical ChatGPT conversation, 80%-90% of the context window is filled with recycled
+							AI-generated text. With Brace, about half is populated with instructor-written text
+							specific to the course, and student code pulled from public repositories on GitHub
+							further
+							grounds the conversation in the student's work.</li>
+						<li>When the LLM makes an embarassing mistake (e.g. regarding course content or pedagogical
+							technique) the course staff can immediately fix this at the course level by editing the
+							assistant's system
+							prompt, wiki pages, or text on Canvas.</li>
+						<li>Access to the top models or most comfortable rate limits is not gated by a student's
+							wealth. All students get the best experience for free.</li>
+						<li>Conversations stay within the <em>course</em>, and they are not sold or mined for others'
+							commercial/institutional benefit.</li>
+					</ol>
+				</li>
+				<li><strong>What data is used to train Brace?</strong> Brace has not been trained specifically for
+					use in this course, and it only knows about the course via prompts (i.e. text injected into the
+					LLM's context window). Brace works as a wrapper around pre-existing LLMs (which are each trained
+					on their own peculiar and likely problematic sources of data).</li>
+				<li><strong>Which LLM is Brace based on?</strong> Brace was developed using the
+					<code>gpt-4o</code> model as the default back-end. However, it is easy for us to swap in
+					alterantives. We are looking for alternatives that are strong (less likely to
+					misbehave), not too costly, and less energy intensive. If monetary cost
+					were no concern, we would still prefer a moderate-strength model to show that the largest models
+					are not necessary for this application. See <a
+						href="https://artificialanalysis.ai/models">Artificial Analysis</a> for a report on the
+					rapidly changing landscape of commercially-available LLM models and services.
+				</li>
+				<li><strong>Where can I listen to the <i>Brace</i> soundtrack?</strong> Enjoy these musical
+					design-fiction tracks we created to keep us hyped
+					during the system's development: <a
+						href="https://suno.com/playlist/17839278-c248-4967-90be-796970592520">🎵 Brace playlist on
+						Suno</a>.</li>
+			</ul>
+			<h3>
+				What's new with Brace Tools?
+			</h3>
+			<ul>
+				<li>offering students a <em>zero-cost</em> LLM assistant</li>
+				<li>offering students a <em>course-specific</em> LLM assistant</li>
+				<li>agentic consultation of pages from a course-specific content+pedagogy wiki</li>
+				<li>agentic review of student code pulled from public GitHub repositories</li>
+				<li>dialog-based first-time setup of communication preferences (e.g. picking non-English languages)
+				</li>
+				<li>dialog-based quiz activities with integrated feedback</li>
+				<li>dialog-based submission for programming projects (git precheck)</li>
+				<li>submitting work directly to Canvas (without manual artifact download/upload)</li>
+				<li>allowing students to log into off-Canvas tool using SSO (no passwords, via Google OAuth2)</li>
+			</ul>
+			<h3>Related university-provided LLM chatbots</h3>
+			<ul>
+				<li><a href="https://seas.harvard.edu/news/2024/01/quacking-computer-programming">CS50 Duck</a> at
+					 (notably the only course-specific assistant on the list so far)</li>
+				<li><a href="https://modes.io/wesbot/">WesBot</a> at UC Santa Cruz</li>
+				<li><a href="https://its.umich.edu/computing/ai">U-M GPT</a> at University of Michigan (see also <a
+						href="https://er.educause.edu/articles/2024/2/how-and-why-the-university-of-michigan-built-its-own-closed-generative-ai-tools">Educause</a>
+					coverage)</a></li>
+				<li><a href="https://blink.ucsd.edu/technology/ai/tritongpt/index.html">TritonGPT</a> at UC San Diego
+				</li>
+				<li><a href="https://zotgpt.uci.edu/">ZotGPT</a> at UC Irvine</li>
+				<li><a
+						href="https://www.studlife.com/news/2024/01/31/washington-university-launches-its-own-version-of-chatgpt">GPT</a>
+					at Washington University</li>
+				<li><a
+						href="https://www.edsurge.com/news/2024-08-27-when-the-teaching-assistant-is-an-ai-twin-of-the-professor">Paul
+						AI and GodaAI</a> at Vilnius University</li>
+			</ul>
+
+			<h3>Campus Generative AI Guidelines</h3>
+			<ul>
+				<li><a href="https://tlc.ucsc.edu/resources/artificial-intelligence-in-teaching-learning/">Artificial
+						Intelligence in Teaching & Learning - UCSC</a></li>
+				<li><a href="https://genai.umich.edu/committee-report">Generative Artificial Intelligence Advisory
+						Committee Report - University of Michigan (June 2023, 78 pages)</a>
+				</li>
+			</ul>
+		</div>
+	</main>
+</body>
+
+</html>
