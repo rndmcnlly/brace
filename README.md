@@ -31,6 +31,8 @@ Before you deploy Brace, make sure you are willing to provide the following:
 
 See [book/README.md](book/README.md) for details. The contents of the `book/` folder are made as `/book` inside of the OWUI container. These files are re-read during each chat-completion request, so the assistant's knowledge is always up to date. Rather than editing these files in a text editor by hand, we recommend using the [GitBook](https://www.gitbook.com/) authoring interface. This will help identify and fix broken links and keep the page index (`SUMMARY.md`) up to date. In a pinch, small, single-file edits can be made directly on GitHub.
 
+For a deeper exploration of how Brace's knowledge wiki relates to the concept of Agent Skills, see [agent-skills.md](agent-skills.md).
+
 ## Provisioning
 
 This section provides instructions for creating and configuring a virtual machine suitable for running a public version of Brace. You can privately test Brace on your own machine if you have Docker installed already.
